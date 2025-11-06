@@ -1,0 +1,7 @@
+project_id = "hyetidpigvmszhkvnekl"
+
+[functions.get-daily-wisdom]
+verify_jwt = false
+
+[functions.generate-lesson]
+verify_jwt = false

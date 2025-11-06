@@ -1,0 +1,119 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Sparkles, RefreshCw, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+const ParentingAssistant = () => {
+  const [wisdom, setWisdom] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const getWisdom = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("get-daily-wisdom");
+      
+      if (error) throw error;
+      
+      setWisdom(data.wisdom);
+      toast({
+        title: "Daily Wisdom Retrieved",
+        description: "May this guidance benefit you and your family.",
+      });
+    } catch (error: any) {
+      console.error("Error getting wisdom:", error);
+      toast({
+        title: "Error",
+        description: "Failed to get daily wisdom. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <section id="parenting-assistant" className="py-20 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+            <Sparkles className="h-8 w-8 text-primary" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+            Daily Wisdom for Parents
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Receive AI-powered guidance rooted in Qur'anic principles to nurture your child's faith and character
+          </p>
+        </div>
+
+        <Card className="p-8 md:p-12 shadow-lg border-border/50 bg-card/50 backdrop-blur-sm">
+          {!wisdom ? (
+            <div className="text-center space-y-6">
+              <p className="text-lg text-muted-foreground">
+                Click below to receive your personalized daily wisdom
+              </p>
+              <Button
+                size="lg"
+                onClick={getWisdom}
+                disabled={isLoading}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Generating Wisdom...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Get Daily Wisdom
+                  </>
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="prose prose-lg max-w-none">
+                <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                  {wisdom}
+                </p>
+              </div>
+              <div className="flex justify-center pt-4">
+                <Button
+                  variant="outline"
+                  onClick={getWisdom}
+                  disabled={isLoading}
+                  className="border-primary/30"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4" />
+                      Get New Wisdom
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Decorative Quote */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-muted-foreground italic">
+            "The best of you are those who learn and teach" - Prophet Muhammad ﷺ
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ParentingAssistant;
