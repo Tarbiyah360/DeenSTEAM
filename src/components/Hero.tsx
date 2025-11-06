@@ -30,11 +30,7 @@ const Hero = () => {
             <img 
               src={logo} 
               alt="Tarbiyah360° Logo" 
-              className="w-24 h-24 animate-in fade-in zoom-in duration-700 animate-pulse"
-              style={{
-                filter: "drop-shadow(0 0 20px hsl(var(--accent) / 0.4))",
-                animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite, fade-in 0.7s ease-out"
-              }}
+              className="w-24 h-24 animate-in fade-in zoom-in duration-700"
             />
           </div>
 
