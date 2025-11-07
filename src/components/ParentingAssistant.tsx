@@ -35,13 +35,13 @@ const ParentingAssistant = () => {
   };
 
   return (
-    <section id="parenting-assistant" className="py-20 px-4">
+    <section id="parenting-assistant" className="py-20 px-4" aria-labelledby="parenting-heading">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4" aria-hidden="true">
             <Sparkles className="h-8 w-8 text-primary" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+          <h2 id="parenting-heading" className="text-4xl md:text-5xl font-bold text-foreground">
             Daily Wisdom for Parents
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -60,15 +60,16 @@ const ParentingAssistant = () => {
                 onClick={getWisdom}
                 disabled={isLoading}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
+                aria-label={isLoading ? "Generating daily wisdom, please wait" : "Get your daily parenting wisdom"}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" aria-hidden="true" />
                     Generating Wisdom...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="mr-2 h-5 w-5" />
+                    <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
                     Get Daily Wisdom
                   </>
                 )}
@@ -76,7 +77,12 @@ const ParentingAssistant = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="prose prose-lg max-w-none">
+              <div 
+                className="prose prose-lg max-w-none" 
+                role="article" 
+                aria-label="Daily parenting wisdom"
+                aria-live="polite"
+              >
                 <p className="text-foreground leading-relaxed whitespace-pre-wrap">
                   {wisdom}
                 </p>
@@ -87,15 +93,16 @@ const ParentingAssistant = () => {
                   onClick={getWisdom}
                   disabled={isLoading}
                   className="border-primary/30"
+                  aria-label={isLoading ? "Loading new wisdom, please wait" : "Get new daily wisdom"}
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                       Loading...
                     </>
                   ) : (
                     <>
-                      <RefreshCw className="mr-2 h-4 w-4" />
+                      <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
                       Get New Wisdom
                     </>
                   )}

@@ -55,13 +55,13 @@ const LessonGenerator = () => {
   };
 
   return (
-    <section id="lesson-generator" className="py-20 px-4 bg-muted/30">
+    <section id="lesson-generator" className="py-20 px-4 bg-muted/30" aria-labelledby="lesson-heading">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/20 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/20 mb-4" aria-hidden="true">
             <BookOpen className="h-8 w-8 text-accent-foreground" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+          <h2 id="lesson-heading" className="text-4xl md:text-5xl font-bold text-foreground">
             Interactive Lesson Generator
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -71,42 +71,62 @@ const LessonGenerator = () => {
 
         {/* Input Section */}
         <Card className="p-6 md:p-8 mb-8 shadow-lg border-border/50">
-          <div className="flex flex-col md:flex-row gap-4">
+          <form 
+            onSubmit={(e) => { e.preventDefault(); generateLesson(); }}
+            className="flex flex-col md:flex-row gap-4"
+            role="search"
+            aria-label="Lesson topic search form"
+          >
+            <label htmlFor="lesson-topic" className="sr-only">
+              Enter a lesson topic
+            </label>
             <Input
+              id="lesson-topic"
               placeholder="Enter a topic (e.g., water, planets, patience, kindness)..."
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && generateLesson()}
               className="flex-1 text-lg py-6"
+              aria-describedby="topic-description"
+              aria-required="true"
             />
+            <span id="topic-description" className="sr-only">
+              Enter any educational topic to generate a comprehensive lesson
+            </span>
             <Button
+              type="submit"
               size="lg"
-              onClick={generateLesson}
               disabled={isLoading}
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8"
+              aria-label={isLoading ? "Creating lesson, please wait" : "Generate lesson for entered topic"}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" aria-hidden="true" />
                   Creating...
                 </>
               ) : (
                 <>
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
                   Generate Lesson
                 </>
               )}
             </Button>
-          </div>
+          </form>
         </Card>
 
         {/* Lesson Display */}
         {lesson && (
-          <div className="grid md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div 
+            className="grid md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
+            role="region"
+            aria-label="Generated lesson content"
+            aria-live="polite"
+          >
             {/* Qur'anic Verse */}
             <Card className="p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <BookOpen className="h-6 w-6 text-primary" />
                 </div>
                 <div className="space-y-2">
@@ -119,7 +139,7 @@ const LessonGenerator = () => {
             {/* Muslim Inventor */}
             <Card className="p-6 shadow-md border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Sparkles className="h-6 w-6 text-secondary-foreground" />
                 </div>
                 <div className="space-y-2">
@@ -132,7 +152,7 @@ const LessonGenerator = () => {
             {/* Activity */}
             <Card className="p-6 shadow-md border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Lightbulb className="h-6 w-6 text-accent-foreground" />
                 </div>
                 <div className="space-y-2">
@@ -145,7 +165,7 @@ const LessonGenerator = () => {
             {/* Reflection */}
             <Card className="p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                   <Heart className="h-6 w-6 text-primary" />
                 </div>
                 <div className="space-y-2">
