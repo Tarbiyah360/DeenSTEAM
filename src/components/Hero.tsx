@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
 import logo from "@/assets/logo.png";
 import { Sparkles, BookOpen, Atom, FlaskConical, Lightbulb, Cpu, Telescope, Dna } from "lucide-react";
 
 const Hero = () => {
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden" aria-label="Hero section">
@@ -54,22 +52,24 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 animate-in slide-in-from-bottom-4 duration-700 delay-500">
             <Button 
               size="lg"
-              onClick={() => scrollToSection("parenting-assistant")}
+              asChild
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-              aria-label="Navigate to daily wisdom section for parenting guidance"
             >
-              <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
-              Get Daily Wisdom
+              <Link to="/daily-wisdom">
+                <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
+                Get Daily Wisdom
+              </Link>
             </Button>
             <Button 
               size="lg"
               variant="outline"
-              onClick={() => scrollToSection("lesson-generator")}
+              asChild
               className="border-2 border-primary-foreground/30 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-lg px-8 py-6 rounded-full backdrop-blur-sm"
-              aria-label="Navigate to lesson generator section to create custom lessons"
             >
-              <BookOpen className="mr-2 h-5 w-5" aria-hidden="true" />
-              Create a Lesson
+              <Link to="/lesson-generator">
+                <BookOpen className="mr-2 h-5 w-5" aria-hidden="true" />
+                Create a Lesson
+              </Link>
             </Button>
           </div>
         </div>
