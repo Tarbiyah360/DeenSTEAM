@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, BookOpen, Atom, Globe, ArrowRight } from "lucide-react";
+import { Sparkles, BookOpen, Atom, Globe, ArrowRight, Users, Heart } from "lucide-react";
 
 const sections = [
   {
@@ -79,6 +79,52 @@ const Index = () => {
                   </Card>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* Global Community Section */}
+        <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/30">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-12 space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <Globe className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+                Global Community
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Join educators and contributors from around the world nurturing the next generation
+              </p>
+            </div>
+
+            {/* Stats Preview */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="p-6 text-center bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
+                <Globe className="h-10 w-10 text-primary mx-auto mb-3" />
+                <p className="text-3xl font-bold text-foreground">285</p>
+                <p className="text-sm text-muted-foreground mt-1">Global Contributors</p>
+              </Card>
+              <Card className="p-6 text-center bg-gradient-to-br from-secondary/5 to-transparent border-secondary/20">
+                <Users className="h-10 w-10 text-secondary-foreground mx-auto mb-3" />
+                <p className="text-3xl font-bold text-foreground">143</p>
+                <p className="text-sm text-muted-foreground mt-1">Active Educators</p>
+              </Card>
+              <Card className="p-6 text-center bg-gradient-to-br from-accent/5 to-transparent border-accent/20">
+                <Heart className="h-10 w-10 text-accent-foreground mx-auto mb-3" />
+                <p className="text-3xl font-bold text-foreground">1000+</p>
+                <p className="text-sm text-muted-foreground mt-1">Families Reached</p>
+              </Card>
+            </div>
+
+            {/* CTA */}
+            <div className="text-center">
+              <Button asChild size="lg" className="gap-2">
+                <Link to="/community">
+                  View Full Community Map
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
