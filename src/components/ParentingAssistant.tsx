@@ -112,12 +112,6 @@ const ParentingAssistant = () => {
           )}
         </Card>
 
-        {/* Decorative Quote */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-muted-foreground italic">
-            "The best of you are those who learn and teach" - Prophet Muhammad ﷺ
-          </p>
-        </div>
       </div>
     </section>
   );

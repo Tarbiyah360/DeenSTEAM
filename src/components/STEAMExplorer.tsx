@@ -71,15 +71,6 @@ const STEAMExplorer = () => {
           })}
         </div>
 
-        {/* Quote */}
-        <div className="mt-12 text-center">
-          <Card className="p-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border-border/30">
-            <p className="text-lg italic text-foreground/80">
-              "Seek knowledge from the cradle to the grave"
-            </p>
-            <p className="text-sm text-muted-foreground mt-2">- Prophet Muhammad ﷺ</p>
-          </Card>
-        </div>
       </div>
     </section>
   );
