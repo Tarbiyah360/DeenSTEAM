@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, BookOpen, Atom, Globe, ArrowRight, Users, Heart } from "lucide-react";
+import { Sparkles, BookOpen, Atom, Globe, ArrowRight, Users, Heart, Microscope, Cpu, Cog, Palette, Calculator } from "lucide-react";
 
 const sections = [
   {
@@ -33,6 +33,39 @@ const sections = [
     description: "Join educators and contributors from around the world nurturing the next generation",
     path: "/community",
     color: "from-primary/20 to-accent/20",
+  },
+];
+
+const steamCategories = [
+  {
+    icon: Microscope,
+    title: "Science",
+    description: "Explore discoveries in chemistry, medicine, and natural sciences",
+    color: "from-blue-500/20 to-cyan-500/20",
+  },
+  {
+    icon: Cpu,
+    title: "Technology",
+    description: "Innovations in computing, engineering, and digital tools",
+    color: "from-purple-500/20 to-pink-500/20",
+  },
+  {
+    icon: Cog,
+    title: "Engineering",
+    description: "Revolutionary designs in mechanics, architecture, and systems",
+    color: "from-orange-500/20 to-red-500/20",
+  },
+  {
+    icon: Palette,
+    title: "Arts",
+    description: "Geometric patterns, calligraphy, and visual innovations",
+    color: "from-green-500/20 to-emerald-500/20",
+  },
+  {
+    icon: Calculator,
+    title: "Mathematics",
+    description: "Algebra, algorithms, and numerical breakthroughs",
+    color: "from-yellow-500/20 to-amber-500/20",
   },
 ];
 
@@ -79,6 +112,52 @@ const Index = () => {
                   </Card>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* STEAM Explorer Preview */}
+        <section className="py-20 px-4 bg-muted/30">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-12 space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <Atom className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+                STEAM Learning
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Discover Muslim scientists and inventors who shaped modern science
+              </p>
+            </div>
+
+            {/* STEAM Cards Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+              {steamCategories.map((category, index) => {
+                const Icon = category.icon;
+                return (
+                  <Card 
+                    key={index}
+                    className="p-6 text-center hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
+                  >
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                      <Icon className="h-7 w-7 text-foreground" />
+                    </div>
+                    <h3 className="font-bold text-foreground mb-2">{category.title}</h3>
+                    <p className="text-xs text-muted-foreground">{category.description}</p>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* CTA */}
+            <div className="text-center">
+              <Button asChild size="lg" className="gap-2">
+                <Link to="/steam-explorer">
+                  Explore All STEAM Topics
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
