@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, Sparkles, BookOpen, Lightbulb, Heart, Bookmark } from "lucide-react";
+import { Loader2, Sparkles, BookOpen, Lightbulb, Heart, Bookmark, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -161,7 +161,26 @@ const LessonGenerator = () => {
         {/* Lesson Display */}
         {lesson && (
           <>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end gap-3 mb-4">
+              <Button
+                onClick={generateLesson}
+                disabled={isLoading}
+                variant="outline"
+                className="gap-2"
+                aria-label="Generate a new lesson for this topic"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    Regenerating...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                    Regenerate
+                  </>
+                )}
+              </Button>
               <Button
                 onClick={saveLesson}
                 disabled={isSaving}
