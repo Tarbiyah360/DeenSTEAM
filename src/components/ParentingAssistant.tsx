@@ -49,7 +49,7 @@ const ParentingAssistant = () => {
           </p>
         </div>
 
-        <Card className="p-8 md:p-12 shadow-lg border-border/50 bg-card/50 backdrop-blur-sm">
+        <Card className="p-8 md:p-12 shadow-xl border-2 border-primary/10 bg-gradient-to-br from-card to-primary/5 backdrop-blur-sm rounded-3xl">
           {!wisdom ? (
             <div className="text-center space-y-6">
               <p className="text-lg text-muted-foreground">
@@ -59,7 +59,7 @@ const ParentingAssistant = () => {
                 size="lg"
                 onClick={getWisdom}
                 disabled={isLoading}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
+                className="shadow-lg hover:shadow-xl"
                 aria-label={isLoading ? "Generating daily wisdom, please wait" : "Get your daily parenting wisdom"}
               >
                 {isLoading ? (
@@ -92,7 +92,6 @@ const ParentingAssistant = () => {
                   variant="outline"
                   onClick={getWisdom}
                   disabled={isLoading}
-                  className="border-primary/30"
                   aria-label={isLoading ? "Loading new wisdom, please wait" : "Get new daily wisdom"}
                 >
                   {isLoading ? (
