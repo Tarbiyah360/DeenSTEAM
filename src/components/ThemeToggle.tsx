@@ -1,4 +1,4 @@
-import { Moon, Sun, Monitor, Type, Accessibility, Contrast, ZapOff, BookOpen } from "lucide-react";
+import { Moon, Sun, Monitor, Type, Accessibility, Contrast, ZapOff, BookOpen, RotateCcw } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,6 +95,25 @@ const ThemeToggle = () => {
     setDyslexiaFont(enabled);
     localStorage.setItem("dyslexiaFont", enabled.toString());
     applyAccessibilityClasses(highContrast, reducedMotion, enabled);
+  };
+
+  const handleReset = () => {
+    // Reset all settings to defaults
+    setFontSize("normal");
+    setHighContrast(false);
+    setReducedMotion(false);
+    setDyslexiaFont(false);
+    setTheme("system");
+    
+    // Clear localStorage
+    localStorage.removeItem("fontSize");
+    localStorage.removeItem("highContrast");
+    localStorage.removeItem("reducedMotion");
+    localStorage.removeItem("dyslexiaFont");
+    
+    // Reset DOM styles and classes
+    document.documentElement.style.fontSize = "16px";
+    document.documentElement.classList.remove("high-contrast", "reduce-motion", "dyslexia-font");
   };
 
   if (!mounted) {
@@ -208,6 +227,17 @@ const ThemeToggle = () => {
           <BookOpen className="h-4 w-4" aria-hidden="true" />
           <span>Dyslexia-Friendly Font</span>
           {dyslexiaFont && <span className="ml-auto text-xs">✓</span>}
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem 
+          onClick={handleReset}
+          className="gap-2 text-destructive focus:text-destructive"
+          aria-label="Reset all accessibility settings to defaults"
+        >
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
+          <span>Reset All Settings</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
