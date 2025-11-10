@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
+import ThemeToggle from "./ThemeToggle";
 
 const Navigation = () => {
   const location = useLocation();
@@ -104,6 +105,9 @@ const Navigation = () => {
                 </Button>
               );
             })}
+            
+            {/* Theme Toggle */}
+            <ThemeToggle />
             
             {/* Auth Buttons */}
             {user ? (
