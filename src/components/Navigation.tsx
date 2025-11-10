@@ -1,18 +1,20 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
-import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User, LayoutDashboard, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { useToast } from "@/hooks/use-toast";
 import ThemeToggle from "./ThemeToggle";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -71,17 +73,17 @@ const Navigation = () => {
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
             aria-label="Tarbiyah360 home page"
           >
-            <img src={logo} alt="Tarbiyah360 logo - Islamic education platform" className="w-10 h-10" />
-            <span className="font-bold text-xl text-foreground hidden sm:inline" aria-hidden="true">
+            <img src={logo} alt="Tarbiyah360 logo - Islamic education platform" className="w-8 h-8 sm:w-10 sm:h-10" />
+            <span className="font-bold text-lg sm:text-xl text-foreground" aria-hidden="true">
               Tarbiyah360°
             </span>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex items-center gap-1" role="list">
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1" role="list">
             {navLinks.map(({ to, label, icon: Icon }) => {
               const isActive = location.pathname === to;
               return (
@@ -99,8 +101,7 @@ const Navigation = () => {
                     aria-label={`Navigate to ${label}`}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
-                    <span className="hidden md:inline">{label}</span>
-                    <span className="sr-only md:hidden">{label}</span>
+                    <span>{label}</span>
                   </Link>
                 </Button>
               );
@@ -119,8 +120,7 @@ const Navigation = () => {
                 aria-label="Sign out"
               >
                 <LogOut className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden md:inline">Sign Out</span>
-                <span className="sr-only md:hidden">Sign Out</span>
+                <span>Sign Out</span>
               </Button>
             ) : (
               <Button
@@ -131,11 +131,71 @@ const Navigation = () => {
               >
                 <Link to="/auth" aria-label="Sign in to your account">
                   <User className="h-4 w-4" aria-hidden="true" />
-                  <span className="hidden md:inline">Sign In</span>
-                  <span className="sr-only md:hidden">Sign In</span>
+                  <span>Sign In</span>
                 </Link>
               </Button>
             )}
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="flex lg:hidden items-center gap-2">
+            <ThemeToggle />
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" aria-label="Open menu">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-64">
+                <div className="flex flex-col gap-4 mt-8">
+                  {navLinks.map(({ to, label, icon: Icon }) => {
+                    const isActive = location.pathname === to;
+                    return (
+                      <Button
+                        key={to}
+                        asChild
+                        variant={isActive ? "default" : "ghost"}
+                        className="justify-start gap-3"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Link to={to}>
+                          <Icon className="h-5 w-5" />
+                          <span>{label}</span>
+                        </Link>
+                      </Button>
+                    );
+                  })}
+                  
+                  <div className="border-t border-border my-2" />
+                  
+                  {user ? (
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        handleSignOut();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="justify-start gap-3"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>Sign Out</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="default"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="justify-start gap-3"
+                    >
+                      <Link to="/auth">
+                        <User className="h-5 w-5" />
+                        <span>Sign In</span>
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>

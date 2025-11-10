@@ -118,59 +118,59 @@ const LessonGenerator = () => {
         {/* Lesson Display */}
         {lesson && (
           <div 
-            className="grid md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
+            className="grid sm:grid-cols-2 gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
             role="region"
             aria-label="Generated lesson content"
             aria-live="polite"
           >
             {/* Qur'anic Verse */}
-            <Card className="p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <BookOpen className="h-6 w-6 text-primary" />
+            <Card className="p-5 sm:p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-lg text-foreground">Qur'anic Wisdom</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{lesson.verse}</p>
+                  <h3 className="font-bold text-base sm:text-lg text-foreground">Qur'anic Wisdom</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{lesson.verse}</p>
                 </div>
               </div>
             </Card>
 
             {/* Muslim Inventor */}
-            <Card className="p-6 shadow-md border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <Sparkles className="h-6 w-6 text-secondary-foreground" />
+            <Card className="p-5 sm:p-6 shadow-md border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-secondary-foreground" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-lg text-foreground">Muslim Heritage</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{lesson.inventor}</p>
+                  <h3 className="font-bold text-base sm:text-lg text-foreground">Muslim Heritage</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{lesson.inventor}</p>
                 </div>
               </div>
             </Card>
 
             {/* Activity */}
-            <Card className="p-6 shadow-md border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <Lightbulb className="h-6 w-6 text-accent-foreground" />
+            <Card className="p-5 sm:p-6 shadow-md border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                  <Lightbulb className="h-5 w-5 sm:h-6 sm:w-6 text-accent-foreground" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-lg text-foreground">Hands-On Activity</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{lesson.activity}</p>
+                  <h3 className="font-bold text-base sm:text-lg text-foreground">Hands-On Activity</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{lesson.activity}</p>
                 </div>
               </div>
             </Card>
 
             {/* Reflection */}
-            <Card className="p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <Heart className="h-6 w-6 text-primary" />
+            <Card className="p-5 sm:p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                  <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-lg text-foreground">Reflection & Dua</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{lesson.reflection}</p>
+                  <h3 className="font-bold text-base sm:text-lg text-foreground">Reflection & Dua</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{lesson.reflection}</p>
                 </div>
               </div>
             </Card>

@@ -89,20 +89,20 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {sections.map((section, index) => {
                 const Icon = section.icon;
                 return (
                   <Card 
                     key={index}
-                    className="p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
+                    className="p-6 sm:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
                   >
                     <div className="space-y-4">
-                      <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${section.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                        <Icon className="h-8 w-8 text-primary" />
+                      <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${section.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                        <Icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
                       </div>
-                      <h3 className="font-bold text-2xl text-foreground">{section.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{section.description}</p>
+                      <h3 className="font-bold text-xl sm:text-2xl text-foreground">{section.title}</h3>
+                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{section.description}</p>
                       <Button asChild className="w-full group-hover:bg-primary/90">
                         <Link to={section.path}>
                           Explore <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -155,19 +155,19 @@ const Index = () => {
             </div>
 
             {/* STEAM Cards Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
               {steamCategories.map((category, index) => {
                 const Icon = category.icon;
                 return (
                   <Card 
                     key={index}
-                    className="p-6 text-center hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
+                    className="p-4 sm:p-6 text-center hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
                   >
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
-                      <Icon className="h-7 w-7 text-foreground" />
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                      <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-foreground" />
                     </div>
-                    <h3 className="font-bold text-foreground mb-2">{category.title}</h3>
-                    <p className="text-xs text-muted-foreground">{category.description}</p>
+                    <h3 className="font-bold text-sm sm:text-base text-foreground mb-2">{category.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{category.description}</p>
                   </Card>
                 );
               })}
@@ -201,21 +201,21 @@ const Index = () => {
             </div>
 
             {/* Stats Preview */}
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <Card className="p-6 text-center bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
-                <Globe className="h-10 w-10 text-primary mx-auto mb-3" />
-                <p className="text-3xl font-bold text-foreground">285</p>
-                <p className="text-sm text-muted-foreground mt-1">Global Contributors</p>
+            <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+              <Card className="p-5 sm:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
+                <Globe className="h-8 w-8 sm:h-10 sm:w-10 text-primary mx-auto mb-3" />
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">285</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Global Contributors</p>
               </Card>
-              <Card className="p-6 text-center bg-gradient-to-br from-secondary/5 to-transparent border-secondary/20">
-                <Users className="h-10 w-10 text-secondary-foreground mx-auto mb-3" />
-                <p className="text-3xl font-bold text-foreground">143</p>
-                <p className="text-sm text-muted-foreground mt-1">Active Educators</p>
+              <Card className="p-5 sm:p-6 text-center bg-gradient-to-br from-secondary/5 to-transparent border-secondary/20">
+                <Users className="h-8 w-8 sm:h-10 sm:w-10 text-secondary-foreground mx-auto mb-3" />
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">143</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Active Educators</p>
               </Card>
-              <Card className="p-6 text-center bg-gradient-to-br from-accent/5 to-transparent border-accent/20">
-                <Heart className="h-10 w-10 text-accent-foreground mx-auto mb-3" />
-                <p className="text-3xl font-bold text-foreground">1000+</p>
-                <p className="text-sm text-muted-foreground mt-1">Families Reached</p>
+              <Card className="p-5 sm:p-6 text-center bg-gradient-to-br from-accent/5 to-transparent border-accent/20">
+                <Heart className="h-8 w-8 sm:h-10 sm:w-10 text-accent-foreground mx-auto mb-3" />
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">1000+</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Families Reached</p>
               </Card>
             </div>
 
@@ -232,9 +232,9 @@ const Index = () => {
         </section>
       </main>
       
-      <footer className="py-12 px-4 border-t border-border/50 bg-muted/30" role="contentinfo">
+      <footer className="py-8 sm:py-12 px-4 border-t border-border/50 bg-muted/30" role="contentinfo">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-8">
             {/* About Section */}
             <div className="text-center md:text-left">
               <h3 className="font-bold text-lg text-foreground mb-3">Tarbiyah360°</h3>

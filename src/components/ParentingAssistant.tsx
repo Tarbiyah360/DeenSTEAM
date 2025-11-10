@@ -49,7 +49,7 @@ const ParentingAssistant = () => {
           </p>
         </div>
 
-        <Card className="p-8 md:p-12 shadow-lg border-border/50 bg-card/50 backdrop-blur-sm">
+        <Card className="p-6 sm:p-8 md:p-12 shadow-lg border-border/50 bg-card/50 backdrop-blur-sm">
           {!wisdom ? (
             <div className="text-center space-y-6">
               <p className="text-lg text-muted-foreground">

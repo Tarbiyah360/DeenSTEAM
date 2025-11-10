@@ -45,23 +45,23 @@ const STEAMExplorer = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
           {steamTopics.map((topic, index) => {
             const Icon = topic.icon;
             return (
               <Card 
                 key={index}
-                className="p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
+                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                    <Icon className="h-8 w-8 text-primary" />
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <Icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
                   </div>
-                  <div className="space-y-3 flex-1">
-                    <h3 className="font-bold text-xl text-foreground">{topic.title}</h3>
-                    <p className="text-sm text-muted-foreground">{topic.description}</p>
+                  <div className="space-y-2 sm:space-y-3 flex-1">
+                    <h3 className="font-bold text-lg sm:text-xl text-foreground">{topic.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{topic.description}</p>
                     <div className="pt-2 border-t border-border/50">
-                      <p className="font-semibold text-accent-foreground">{topic.inventor}</p>
+                      <p className="font-semibold text-sm sm:text-base text-accent-foreground">{topic.inventor}</p>
                       <p className="text-xs text-muted-foreground mt-1">{topic.contribution}</p>
                     </div>
                   </div>
