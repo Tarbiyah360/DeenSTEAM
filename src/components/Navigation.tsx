@@ -43,7 +43,6 @@ const Navigation = () => {
   };
   
   const navLinks = [
-    { to: "/", label: "Home", icon: Home },
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles },
     { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom },
