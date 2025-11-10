@@ -25,49 +25,13 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          {/* Logo with Orbital Doodles */}
-          <div className="relative flex justify-center mb-6 h-80">
-            {/* Central Logo */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <img 
-                src={logo} 
-                alt="Tarbiyah360 logo featuring a crescent moon and stars" 
-                className="w-32 h-32 animate-in fade-in zoom-in duration-700 drop-shadow-2xl"
-              />
-            </div>
-
-            {/* Orbiting STEAM Icons */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full">
-              {/* Science - Atom */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit" style={{ animationDelay: '0s' }}>
-                <Atom className="w-12 h-12 text-accent drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-              
-              {/* Technology - CPU */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit" style={{ animationDelay: '-3.3s' }}>
-                <Cpu className="w-14 h-14 text-primary-foreground/90 drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-              
-              {/* Engineering - Lightbulb */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit" style={{ animationDelay: '-6.6s' }}>
-                <Lightbulb className="w-11 h-11 text-accent/90 drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-              
-              {/* Arts - Telescope */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit-reverse" style={{ animationDelay: '0s' }}>
-                <Telescope className="w-13 h-13 text-primary-foreground drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-              
-              {/* Math - Flask */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit-reverse" style={{ animationDelay: '-6.25s' }}>
-                <FlaskConical className="w-12 h-12 text-accent/80 drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-              
-              {/* DNA */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit-reverse" style={{ animationDelay: '-12.5s' }}>
-                <Dna className="w-10 h-10 text-primary-foreground/90 drop-shadow-lg" strokeWidth={1.5} />
-              </div>
-            </div>
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src={logo} 
+              alt="Tarbiyah360 logo featuring a crescent moon and stars" 
+              className="w-24 h-24 animate-in fade-in zoom-in duration-700"
+            />
           </div>
 
           {/* Heading */}
@@ -111,6 +75,38 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Floating STEAM Icons - Decorative */}
+      <div className="absolute inset-0 z-5 pointer-events-none overflow-hidden" aria-hidden="true">
+        {/* Science - Atom */}
+        <div className="absolute top-[15%] left-[8%] opacity-80 animate-float" style={{ animationDelay: '0s' }}>
+          <Atom className="w-12 h-12 text-accent" strokeWidth={1.5} />
+        </div>
+        
+        {/* Technology - CPU */}
+        <div className="absolute top-[25%] right-[12%] opacity-70 animate-float-slow" style={{ animationDelay: '1s' }}>
+          <Cpu className="w-14 h-14 text-primary-foreground/80" strokeWidth={1.5} />
+        </div>
+        
+        {/* Engineering - Lightbulb */}
+        <div className="absolute top-[60%] left-[15%] opacity-75 animate-float" style={{ animationDelay: '2s' }}>
+          <Lightbulb className="w-11 h-11 text-accent/90" strokeWidth={1.5} />
+        </div>
+        
+        {/* Arts - Telescope */}
+        <div className="absolute top-[45%] right-[8%] opacity-80 animate-float-slow" style={{ animationDelay: '1.5s' }}>
+          <Telescope className="w-13 h-13 text-primary-foreground/90" strokeWidth={1.5} />
+        </div>
+        
+        {/* Math - Flask */}
+        <div className="absolute top-[70%] right-[20%] opacity-70 animate-float" style={{ animationDelay: '0.5s' }}>
+          <FlaskConical className="w-12 h-12 text-accent/80" strokeWidth={1.5} />
+        </div>
+        
+        {/* DNA */}
+        <div className="absolute top-[35%] left-[5%] opacity-75 animate-float-slow" style={{ animationDelay: '2.5s' }}>
+          <Dna className="w-10 h-10 text-primary-foreground/85" strokeWidth={1.5} />
+        </div>
+      </div>
 
       {/* Decorative Elements */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />

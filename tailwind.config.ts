@@ -102,30 +102,12 @@ export default {
             transform: "translateY(-25px) translateX(15px) rotate(8deg)",
           },
         },
-        "orbit": {
-          "0%": { 
-            transform: "rotate(0deg) translateX(140px) rotate(0deg)",
-          },
-          "100%": { 
-            transform: "rotate(360deg) translateX(140px) rotate(-360deg)",
-          },
-        },
-        "orbit-reverse": {
-          "0%": { 
-            transform: "rotate(0deg) translateX(140px) rotate(0deg)",
-          },
-          "100%": { 
-            transform: "rotate(-360deg) translateX(140px) rotate(360deg)",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 6s ease-in-out infinite",
         "float-slow": "float-slow 8s ease-in-out infinite",
-        "orbit": "orbit 20s linear infinite",
-        "orbit-reverse": "orbit-reverse 25s linear infinite",
       },
     },
   },
