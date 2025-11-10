@@ -102,7 +102,20 @@ Return your response as a JSON object with these keys: verse, inventor, activity
     }
 
     const data = await response.json();
-    const lessonContent = data.choices[0].message.content;
+    let lessonContent = data.choices[0].message.content;
+    
+    // Strip markdown code fences if present
+    lessonContent = lessonContent.trim();
+    if (lessonContent.startsWith('```json')) {
+      lessonContent = lessonContent.slice(7); // Remove ```json
+    } else if (lessonContent.startsWith('```')) {
+      lessonContent = lessonContent.slice(3); // Remove ```
+    }
+    if (lessonContent.endsWith('```')) {
+      lessonContent = lessonContent.slice(0, -3); // Remove trailing ```
+    }
+    lessonContent = lessonContent.trim();
+    
     const lesson = JSON.parse(lessonContent);
 
     console.log("Successfully generated lesson");
