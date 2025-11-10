@@ -1,4 +1,4 @@
-import { Moon, Sun, Monitor, Type, Accessibility } from "lucide-react";
+import { Moon, Sun, Monitor, Type, Accessibility, Contrast, ZapOff, BookOpen } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,14 +14,32 @@ import { useState, useEffect } from "react";
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [fontSize, setFontSize] = useState<string>("normal");
+  const [highContrast, setHighContrast] = useState<boolean>(false);
+  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+  const [dyslexiaFont, setDyslexiaFont] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
     const savedFontSize = localStorage.getItem("fontSize") || "normal";
+    const savedHighContrast = localStorage.getItem("highContrast") === "true";
+    const savedReducedMotion = localStorage.getItem("reducedMotion") === "true";
+    const savedDyslexiaFont = localStorage.getItem("dyslexiaFont") === "true";
+    
     setFontSize(savedFontSize);
+    setHighContrast(savedHighContrast);
+    setReducedMotion(savedReducedMotion);
+    setDyslexiaFont(savedDyslexiaFont);
+    
     document.documentElement.style.fontSize = getFontSizeValue(savedFontSize);
+    applyAccessibilityClasses(savedHighContrast, savedReducedMotion, savedDyslexiaFont);
+    
+    // Detect system preference for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion && !savedReducedMotion) {
+      handleReducedMotionChange(true);
+    }
   }, []);
 
   const getFontSizeValue = (size: string) => {
@@ -35,15 +53,53 @@ const ThemeToggle = () => {
     }
   };
 
+  const applyAccessibilityClasses = (contrast: boolean, motion: boolean, font: boolean) => {
+    if (contrast) {
+      document.documentElement.classList.add("high-contrast");
+    } else {
+      document.documentElement.classList.remove("high-contrast");
+    }
+    
+    if (motion) {
+      document.documentElement.classList.add("reduce-motion");
+    } else {
+      document.documentElement.classList.remove("reduce-motion");
+    }
+    
+    if (font) {
+      document.documentElement.classList.add("dyslexia-font");
+    } else {
+      document.documentElement.classList.remove("dyslexia-font");
+    }
+  };
+
   const handleFontSizeChange = (size: string) => {
     setFontSize(size);
     localStorage.setItem("fontSize", size);
     document.documentElement.style.fontSize = getFontSizeValue(size);
   };
 
+  const handleHighContrastChange = (enabled: boolean) => {
+    setHighContrast(enabled);
+    localStorage.setItem("highContrast", enabled.toString());
+    applyAccessibilityClasses(enabled, reducedMotion, dyslexiaFont);
+  };
+
+  const handleReducedMotionChange = (enabled: boolean) => {
+    setReducedMotion(enabled);
+    localStorage.setItem("reducedMotion", enabled.toString());
+    applyAccessibilityClasses(highContrast, enabled, dyslexiaFont);
+  };
+
+  const handleDyslexiaFontChange = (enabled: boolean) => {
+    setDyslexiaFont(enabled);
+    localStorage.setItem("dyslexiaFont", enabled.toString());
+    applyAccessibilityClasses(highContrast, reducedMotion, enabled);
+  };
+
   if (!mounted) {
     return (
-      <Button variant="ghost" size="sm" aria-label="Theme settings">
+      <Button variant="accessible" size="sm" aria-label="Accessibility settings">
         <Accessibility className="h-4 w-4" aria-hidden="true" />
       </Button>
     );
@@ -53,7 +109,7 @@ const ThemeToggle = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
-          variant="ghost" 
+          variant="accessible" 
           size="sm" 
           className="gap-2"
           aria-label="Accessibility and theme settings"
@@ -62,7 +118,7 @@ const ThemeToggle = () => {
           <span className="sr-only">Accessibility settings</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-64 bg-popover z-50">
         <DropdownMenuLabel>Appearance</DropdownMenuLabel>
         <DropdownMenuItem 
           onClick={() => setTheme("light")}
@@ -121,6 +177,37 @@ const ThemeToggle = () => {
           <Type className="h-5 w-5" aria-hidden="true" />
           <span>Large</span>
           {fontSize === "large" && <span className="ml-auto text-xs">✓</span>}
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuLabel>Accessibility Features</DropdownMenuLabel>
+        <DropdownMenuItem 
+          onClick={() => handleHighContrastChange(!highContrast)}
+          className="gap-2"
+          aria-current={highContrast ? "true" : undefined}
+        >
+          <Contrast className="h-4 w-4" aria-hidden="true" />
+          <span>High Contrast</span>
+          {highContrast && <span className="ml-auto text-xs">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => handleReducedMotionChange(!reducedMotion)}
+          className="gap-2"
+          aria-current={reducedMotion ? "true" : undefined}
+        >
+          <ZapOff className="h-4 w-4" aria-hidden="true" />
+          <span>Reduce Motion</span>
+          {reducedMotion && <span className="ml-auto text-xs">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => handleDyslexiaFontChange(!dyslexiaFont)}
+          className="gap-2"
+          aria-current={dyslexiaFont ? "true" : undefined}
+        >
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          <span>Dyslexia-Friendly Font</span>
+          {dyslexiaFont && <span className="ml-auto text-xs">✓</span>}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
