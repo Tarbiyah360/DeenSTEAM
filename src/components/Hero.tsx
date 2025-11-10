@@ -19,7 +19,7 @@ const Hero = () => {
         role="img"
         aria-label="Background with STEAM educational doodles including scientific symbols, mathematical formulas, and geometric shapes"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-background/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-background/95" />
       </div>
 
       {/* Content */}
@@ -78,33 +78,33 @@ const Hero = () => {
       {/* Floating STEAM Icons - Decorative */}
       <div className="absolute inset-0 z-5 pointer-events-none overflow-hidden" aria-hidden="true">
         {/* Science - Atom */}
-        <div className="absolute top-[15%] left-[8%] opacity-80 animate-float" style={{ animationDelay: '0s' }}>
-          <Atom className="w-12 h-12 text-accent" strokeWidth={1.5} />
+        <div className="absolute top-[15%] left-[8%] opacity-90 animate-float" style={{ animationDelay: '0s' }}>
+          <Atom className="w-20 h-20 text-accent" strokeWidth={1.5} />
         </div>
         
         {/* Technology - CPU */}
-        <div className="absolute top-[25%] right-[12%] opacity-70 animate-float-slow" style={{ animationDelay: '1s' }}>
-          <Cpu className="w-14 h-14 text-primary-foreground/80" strokeWidth={1.5} />
+        <div className="absolute top-[25%] right-[12%] opacity-85 animate-float-slow" style={{ animationDelay: '1s' }}>
+          <Cpu className="w-24 h-24 text-primary-foreground/90" strokeWidth={1.5} />
         </div>
         
         {/* Engineering - Lightbulb */}
-        <div className="absolute top-[60%] left-[15%] opacity-75 animate-float" style={{ animationDelay: '2s' }}>
-          <Lightbulb className="w-11 h-11 text-accent/90" strokeWidth={1.5} />
+        <div className="absolute top-[60%] left-[15%] opacity-90 animate-float" style={{ animationDelay: '2s' }}>
+          <Lightbulb className="w-18 h-18 text-accent/95" strokeWidth={1.5} />
         </div>
         
         {/* Arts - Telescope */}
-        <div className="absolute top-[45%] right-[8%] opacity-80 animate-float-slow" style={{ animationDelay: '1.5s' }}>
-          <Telescope className="w-13 h-13 text-primary-foreground/90" strokeWidth={1.5} />
+        <div className="absolute top-[45%] right-[8%] opacity-90 animate-float-slow" style={{ animationDelay: '1.5s' }}>
+          <Telescope className="w-22 h-22 text-primary-foreground/95" strokeWidth={1.5} />
         </div>
         
         {/* Math - Flask */}
-        <div className="absolute top-[70%] right-[20%] opacity-70 animate-float" style={{ animationDelay: '0.5s' }}>
-          <FlaskConical className="w-12 h-12 text-accent/80" strokeWidth={1.5} />
+        <div className="absolute top-[70%] right-[20%] opacity-85 animate-float" style={{ animationDelay: '0.5s' }}>
+          <FlaskConical className="w-20 h-20 text-accent/90" strokeWidth={1.5} />
         </div>
         
         {/* DNA */}
-        <div className="absolute top-[35%] left-[5%] opacity-75 animate-float-slow" style={{ animationDelay: '2.5s' }}>
-          <Dna className="w-10 h-10 text-primary-foreground/85" strokeWidth={1.5} />
+        <div className="absolute top-[35%] left-[5%] opacity-90 animate-float-slow" style={{ animationDelay: '2.5s' }}>
+          <Dna className="w-16 h-16 text-primary-foreground/90" strokeWidth={1.5} />
         </div>
       </div>
 
