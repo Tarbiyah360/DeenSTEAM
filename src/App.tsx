@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import DailyWisdom from "./pages/DailyWisdom";
 import STEAMExplorerPage from "./pages/STEAMExplorerPage";
 import LessonGeneratorPage from "./pages/LessonGeneratorPage";
+import SavedLessons from "./pages/SavedLessons";
 import Community from "./pages/Community";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/daily-wisdom" element={<DailyWisdom />} />
             <Route path="/steam-explorer" element={<STEAMExplorerPage />} />
             <Route path="/lesson-generator" element={<LessonGeneratorPage />} />
+            <Route path="/saved-lessons" element={<SavedLessons />} />
             <Route path="/community" element={<Community />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />

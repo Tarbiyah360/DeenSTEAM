@@ -80,6 +80,33 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_lessons: {
+        Row: {
+          created_at: string
+          id: string
+          lesson_content: Json
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lesson_content: Json
+          topic: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lesson_content?: Json
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

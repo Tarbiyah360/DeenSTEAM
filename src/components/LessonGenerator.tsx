@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, Sparkles, BookOpen, Lightbulb, Heart } from "lucide-react";
+import { Loader2, Sparkles, BookOpen, Lightbulb, Heart, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -17,6 +17,7 @@ const LessonGenerator = () => {
   const [topic, setTopic] = useState("");
   const [lesson, setLesson] = useState<LessonContent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   const generateLesson = async () => {
@@ -51,6 +52,48 @@ const LessonGenerator = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const saveLesson = async () => {
+    if (!lesson || !topic) return;
+
+    setIsSaving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to save lessons.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from("saved_lessons")
+        .insert({
+          user_id: user.id,
+          topic: topic,
+          lesson_content: lesson as any,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Lesson Saved!",
+        description: "You can view it in your Saved Lessons.",
+      });
+    } catch (error: any) {
+      console.error("Error saving lesson:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save lesson. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -117,12 +160,34 @@ const LessonGenerator = () => {
 
         {/* Lesson Display */}
         {lesson && (
-          <div 
-            className="grid sm:grid-cols-2 gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
-            role="region"
-            aria-label="Generated lesson content"
-            aria-live="polite"
-          >
+          <>
+            <div className="flex justify-end mb-4">
+              <Button
+                onClick={saveLesson}
+                disabled={isSaving}
+                variant="outline"
+                className="gap-2"
+                aria-label="Save this lesson to your library"
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="h-4 w-4" aria-hidden="true" />
+                    Save Lesson
+                  </>
+                )}
+              </Button>
+            </div>
+            <div 
+              className="grid sm:grid-cols-2 gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
+              role="region"
+              aria-label="Generated lesson content"
+              aria-live="polite"
+            >
             {/* Qur'anic Verse */}
             <Card className="p-5 sm:p-6 shadow-md border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
               <div className="flex items-start gap-3 sm:gap-4">
@@ -175,6 +240,7 @@ const LessonGenerator = () => {
               </div>
             </Card>
           </div>
+          </>
         )}
       </div>
     </section>

@@ -50,6 +50,7 @@ const Navigation = () => {
     { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles },
     { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom },
     { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen },
+    { to: "/saved-lessons", label: "Saved Lessons", icon: BookOpen },
     { to: "/community", label: "Community", icon: Globe },
   ];
 
