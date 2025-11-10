@@ -7,6 +7,10 @@ import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import DailyWisdom from "./pages/DailyWisdom";
 import STEAMExplorerPage from "./pages/STEAMExplorerPage";
+import AlBattaniPage from "./pages/AlBattaniPage";
+import JabirIbnHayyanPage from "./pages/JabirIbnHayyanPage";
+import IbnSinaPage from "./pages/IbnSinaPage";
+import AlKhwarizmiPage from "./pages/AlKhwarizmiPage";
 import LessonGeneratorPage from "./pages/LessonGeneratorPage";
 import SavedLessons from "./pages/SavedLessons";
 import Community from "./pages/Community";
@@ -30,6 +34,10 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/daily-wisdom" element={<DailyWisdom />} />
             <Route path="/steam-explorer" element={<STEAMExplorerPage />} />
+            <Route path="/scientist/al-battani" element={<AlBattaniPage />} />
+            <Route path="/scientist/jabir-ibn-hayyan" element={<JabirIbnHayyanPage />} />
+            <Route path="/scientist/ibn-sina" element={<IbnSinaPage />} />
+            <Route path="/scientist/al-khwarizmi" element={<AlKhwarizmiPage />} />
             <Route path="/lesson-generator" element={<LessonGeneratorPage />} />
             <Route path="/saved-lessons" element={<SavedLessons />} />
             <Route path="/community" element={<Community />} />

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Atom, Microscope, Telescope, Beaker } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const steamTopics = [
   {
@@ -8,6 +9,7 @@ const steamTopics = [
     description: "Explore the universe through Islamic golden age astronomers",
     inventor: "Al-Battani",
     contribution: "Precise calculations of planetary orbits",
+    link: "/scientist/al-battani",
   },
   {
     icon: Beaker,
@@ -15,6 +17,7 @@ const steamTopics = [
     description: "Discover the foundations of modern chemistry",
     inventor: "Jabir ibn Hayyan",
     contribution: "Father of chemistry, pioneered experimental methods",
+    link: "/scientist/jabir-ibn-hayyan",
   },
   {
     icon: Microscope,
@@ -22,6 +25,7 @@ const steamTopics = [
     description: "Learn about revolutionary medical discoveries",
     inventor: "Ibn Sina (Avicenna)",
     contribution: "The Canon of Medicine, used for 600+ years",
+    link: "/scientist/ibn-sina",
   },
   {
     icon: Atom,
@@ -29,10 +33,13 @@ const steamTopics = [
     description: "Mathematical innovations that changed the world",
     inventor: "Al-Khwarizmi",
     contribution: "Algebra and algorithms",
+    link: "/scientist/al-khwarizmi",
   },
 ];
 
 const STEAMExplorer = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -51,7 +58,8 @@ const STEAMExplorer = () => {
             return (
               <Card 
                 key={index}
-                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group"
+                onClick={() => navigate(topic.link)}
+                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group cursor-pointer hover:scale-[1.02]"
               >
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
