@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
-import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User } from "lucide-react";
+import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User, LayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser } from "@supabase/supabase-js";
@@ -44,6 +44,7 @@ const Navigation = () => {
   
   const navLinks = [
     { to: "/", label: "Home", icon: Home },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles },
     { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom },
     { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen },

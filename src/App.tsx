@@ -9,6 +9,7 @@ import STEAMExplorerPage from "./pages/STEAMExplorerPage";
 import LessonGeneratorPage from "./pages/LessonGeneratorPage";
 import Community from "./pages/Community";
 import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import AmbassadorDashboard from "./pages/AmbassadorDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/lesson-generator" element={<LessonGeneratorPage />} />
           <Route path="/community" element={<Community />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/ambassador-dashboard" element={<AmbassadorDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
