@@ -12,6 +12,8 @@ import Community from "./pages/Community";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AmbassadorDashboard from "./pages/AmbassadorDashboard";
+import AmbassadorApplication from "./pages/AmbassadorApplication";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/ambassador-dashboard" element={<AmbassadorDashboard />} />
+            <Route path="/ambassador-application" element={<AmbassadorApplication />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

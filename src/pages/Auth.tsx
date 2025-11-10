@@ -13,7 +13,6 @@ import logo from "@/assets/logo.png";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isAmbassador, setIsAmbassador] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -55,17 +54,6 @@ const Auth = () => {
       });
 
       if (error) throw error;
-
-      // If signing up as ambassador, add the role
-      if (isAmbassador) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase.from("user_roles").insert({
-            user_id: user.id,
-            role: "ambassador",
-          });
-        }
-      }
 
       toast({
         title: "Success!",
@@ -140,7 +128,7 @@ const Auth = () => {
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup" onClick={() => setIsAmbassador(false)}>Sign Up</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
           <TabsContent value="signin">
@@ -236,14 +224,10 @@ const Auth = () => {
           <Button
             variant="outline"
             className="w-full mt-4"
-            onClick={() => {
-              setIsAmbassador(true);
-              const signupTab = document.querySelector('[value="signup"]') as HTMLElement;
-              signupTab?.click();
-            }}
+            onClick={() => navigate("/ambassador-application")}
             disabled={isLoading}
           >
-            Become a STEAM Ambassador
+            Apply to Become a STEAM Ambassador
           </Button>
         </div>
       </Card>
