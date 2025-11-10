@@ -53,7 +53,7 @@ const Hero = () => {
             <Button 
               size="lg"
               asChild
-              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
             >
               <Link to="/daily-wisdom">
                 <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
@@ -64,7 +64,7 @@ const Hero = () => {
               size="lg"
               variant="outline"
               asChild
-              className="border-2 border-primary-foreground/50 bg-primary-foreground/15 hover:bg-primary-foreground/25 text-primary-foreground backdrop-blur-sm shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+              className="border-2 border-primary-foreground/30 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-lg px-8 py-6 rounded-full backdrop-blur-sm"
             >
               <Link to="/lesson-generator">
                 <BookOpen className="mr-2 h-5 w-5" aria-hidden="true" />

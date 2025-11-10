@@ -8,57 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 220 15% 25%;
+    --background: 35 25% 97%;
+    --foreground: 160 30% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 25%;
+    --card-foreground: 160 30% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 25%;
+    --popover-foreground: 160 30% 15%;
 
-    /* Cheerful purple-blue - playful primary */
-    --primary: 260 65% 55%;
-    --primary-foreground: 0 0% 100%;
+    /* Deep emerald green - primary brand color */
+    --primary: 160 55% 28%;
+    --primary-foreground: 35 25% 97%;
 
-    /* Warm coral - inviting secondary */
-    --secondary: 20 85% 70%;
-    --secondary-foreground: 220 15% 25%;
+    /* Sage green - calming secondary */
+    --secondary: 140 25% 65%;
+    --secondary-foreground: 160 30% 15%;
 
-    /* Soft pastel tones */
-    --muted: 220 20% 92%;
-    --muted-foreground: 220 15% 50%;
+    /* Soft muted tones */
+    --muted: 140 20% 90%;
+    --muted-foreground: 160 15% 45%;
 
-    /* Sunny yellow accent */
-    --accent: 45 95% 60%;
-    --accent-foreground: 220 15% 25%;
+    /* Soft gold accent */
+    --accent: 45 75% 65%;
+    --accent-foreground: 160 30% 15%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 94%;
-    --ring: 260 65% 55%;
+    --border: 140 15% 88%;
+    --input: 140 15% 92%;
+    --ring: 160 55% 28%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
     
-    /* Custom design tokens for Tarbiyah360° - Playful Kids Theme */
-    --playful-purple: 260 65% 55%;
-    --warm-coral: 20 85% 70%;
-    --sunny-yellow: 45 95% 60%;
-    --soft-pink: 340 80% 85%;
-    --sky-blue: 200 80% 75%;
-    --mint-green: 160 60% 70%;
+    /* Custom design tokens for Tarbiyah360° */
+    --emerald-deep: 160 55% 28%;
+    --sage: 140 25% 65%;
+    --gold: 45 75% 65%;
+    --blush: 350 70% 88%;
+    --ivory: 35 25% 97%;
     
-    /* Cheerful gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(260 65% 55%), hsl(200 80% 75%));
-    --gradient-warm: linear-gradient(135deg, hsl(20 85% 70%), hsl(45 95% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(260 65% 55% / 0.92), hsl(200 80% 75% / 0.88));
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(160 55% 28%), hsl(140 25% 65%));
+    --gradient-glow: linear-gradient(180deg, hsl(350 70% 88% / 0.3), transparent);
+    --gradient-hero: linear-gradient(135deg, hsl(160 55% 28% / 0.95), hsl(140 40% 45% / 0.9));
     
-    /* Playful shadows */
-    --shadow-soft: 0 4px 24px hsl(260 65% 55% / 0.12);
-    --shadow-glow: 0 0 40px hsl(45 95% 60% / 0.3);
-    --shadow-card: 0 10px 35px hsl(260 40% 50% / 0.1);
+    /* Shadows with soft glow */
+    --shadow-soft: 0 4px 20px hsl(160 55% 28% / 0.1);
+    --shadow-glow: 0 0 40px hsl(350 70% 88% / 0.4);
+    --shadow-card: 0 8px 30px hsl(160 40% 20% / 0.08);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,33 +80,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 260 30% 12%;
-    --foreground: 210 40% 98%;
+    --background: 160 30% 8%;
+    --foreground: 35 25% 97%;
 
-    --card: 260 25% 16%;
-    --card-foreground: 210 40% 98%;
+    --card: 160 25% 12%;
+    --card-foreground: 35 25% 97%;
 
-    --popover: 260 25% 16%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 160 25% 12%;
+    --popover-foreground: 35 25% 97%;
 
-    --primary: 260 60% 65%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 140 40% 55%;
+    --primary-foreground: 160 30% 8%;
 
-    --secondary: 20 80% 65%;
-    --secondary-foreground: 260 30% 12%;
+    --secondary: 160 20% 20%;
+    --secondary-foreground: 35 25% 97%;
 
-    --muted: 260 20% 22%;
-    --muted-foreground: 220 20% 75%;
+    --muted: 160 20% 20%;
+    --muted-foreground: 140 20% 70%;
 
-    --accent: 45 90% 65%;
-    --accent-foreground: 260 30% 12%;
+    --accent: 45 70% 60%;
+    --accent-foreground: 160 30% 8%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 35 25% 97%;
 
-    --border: 260 20% 25%;
-    --input: 260 20% 22%;
-    --ring: 260 60% 65%;
+    --border: 160 20% 20%;
+    --input: 160 20% 20%;
+    --ring: 140 40% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
