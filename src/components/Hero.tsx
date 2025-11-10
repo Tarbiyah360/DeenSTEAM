@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
 import logo from "@/assets/logo.png";
 import { Sparkles, BookOpen, Atom, FlaskConical, Lightbulb, Cpu, Telescope, Dna } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Hero = () => {
 
@@ -75,38 +76,82 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Floating STEAM Icons - Decorative */}
-      <div className="absolute inset-0 z-5 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Science - Atom */}
-        <div className="absolute top-[15%] left-[8%] opacity-80 animate-float" style={{ animationDelay: '0s' }}>
-          <Atom className="w-12 h-12 text-accent" strokeWidth={1.5} />
+      {/* Floating STEAM Icons - Interactive */}
+      <TooltipProvider>
+        <div className="absolute inset-0 z-5 overflow-hidden" aria-hidden="true">
+          {/* Science - Atom */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[15%] left-[8%] opacity-80 animate-float hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '0s' }}>
+                <Atom className="w-12 h-12 text-accent" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Science</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          {/* Technology - CPU */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[25%] right-[12%] opacity-70 animate-float-slow hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '1s' }}>
+                <Cpu className="w-14 h-14 text-primary-foreground/80" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Technology</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          {/* Engineering - Lightbulb */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[60%] left-[15%] opacity-75 animate-float hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '2s' }}>
+                <Lightbulb className="w-11 h-11 text-accent/90" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Engineering</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          {/* Arts - Telescope */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[45%] right-[8%] opacity-80 animate-float-slow hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '1.5s' }}>
+                <Telescope className="w-13 h-13 text-primary-foreground/90" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Arts</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          {/* Math - Flask */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[70%] right-[20%] opacity-70 animate-float hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '0.5s' }}>
+                <FlaskConical className="w-12 h-12 text-accent/80" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Mathematics</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          {/* DNA */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute top-[35%] left-[5%] opacity-75 animate-float-slow hover:[animation-play-state:paused] pointer-events-auto cursor-pointer" style={{ animationDelay: '2.5s' }}>
+                <Dna className="w-10 h-10 text-primary-foreground/85" strokeWidth={1.5} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Science</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
-        
-        {/* Technology - CPU */}
-        <div className="absolute top-[25%] right-[12%] opacity-70 animate-float-slow" style={{ animationDelay: '1s' }}>
-          <Cpu className="w-14 h-14 text-primary-foreground/80" strokeWidth={1.5} />
-        </div>
-        
-        {/* Engineering - Lightbulb */}
-        <div className="absolute top-[60%] left-[15%] opacity-75 animate-float" style={{ animationDelay: '2s' }}>
-          <Lightbulb className="w-11 h-11 text-accent/90" strokeWidth={1.5} />
-        </div>
-        
-        {/* Arts - Telescope */}
-        <div className="absolute top-[45%] right-[8%] opacity-80 animate-float-slow" style={{ animationDelay: '1.5s' }}>
-          <Telescope className="w-13 h-13 text-primary-foreground/90" strokeWidth={1.5} />
-        </div>
-        
-        {/* Math - Flask */}
-        <div className="absolute top-[70%] right-[20%] opacity-70 animate-float" style={{ animationDelay: '0.5s' }}>
-          <FlaskConical className="w-12 h-12 text-accent/80" strokeWidth={1.5} />
-        </div>
-        
-        {/* DNA */}
-        <div className="absolute top-[35%] left-[5%] opacity-75 animate-float-slow" style={{ animationDelay: '2.5s' }}>
-          <Dna className="w-10 h-10 text-primary-foreground/85" strokeWidth={1.5} />
-        </div>
-      </div>
+      </TooltipProvider>
 
       {/* Decorative Elements */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
