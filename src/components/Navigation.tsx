@@ -84,7 +84,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center gap-1" role="list">
+          <div className="hidden md:flex items-center gap-1" role="list">
             {navLinks.map(({ to, label, icon: Icon }) => {
               const isActive = location.pathname === to;
               return (
@@ -138,8 +138,9 @@ const Navigation = () => {
             )}
           </div>
 
-          {/* Mobile Menu */}
-          <div className="flex lg:hidden items-center gap-2">
+          {/* Mobile Menu - Only show on smallest screens when logged in */}
+          {user && (
+            <div className="flex md:hidden items-center gap-2">
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -197,7 +198,8 @@ const Navigation = () => {
                 </div>
               </SheetContent>
             </Sheet>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
