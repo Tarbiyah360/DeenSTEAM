@@ -5,6 +5,31 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Input validation schema
+const validateTopic = (topic: string): { valid: boolean; error?: string } => {
+  if (!topic || typeof topic !== 'string') {
+    return { valid: false, error: "Topic is required" };
+  }
+  
+  const trimmedTopic = topic.trim();
+  
+  if (trimmedTopic.length === 0) {
+    return { valid: false, error: "Topic cannot be empty" };
+  }
+  
+  if (trimmedTopic.length > 100) {
+    return { valid: false, error: "Topic must be less than 100 characters" };
+  }
+  
+  // Allow alphanumeric, spaces, and basic punctuation
+  const validCharPattern = /^[a-zA-Z0-9\s,.\-']+$/;
+  if (!validCharPattern.test(trimmedTopic)) {
+    return { valid: false, error: "Topic contains invalid characters" };
+  }
+  
+  return { valid: true };
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -13,16 +38,26 @@ serve(async (req) => {
   try {
     const { topic } = await req.json();
 
-    if (!topic) {
-      throw new Error("Topic is required");
+    // Validate topic input
+    const validation = validateTopic(topic);
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
+    
+    const sanitizedTopic = topic.trim();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log(`Generating lesson for topic: ${topic}`);
+    console.log(`Generating lesson for topic: ${sanitizedTopic}`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -53,7 +88,7 @@ Return your response as a JSON object with these keys: verse, inventor, activity
           },
           {
             role: "user",
-            content: `Create a lesson about: ${topic}`,
+            content: `Create a lesson about: ${sanitizedTopic}`,
           },
         ],
         response_format: { type: "json_object" },
