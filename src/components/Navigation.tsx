@@ -1,10 +1,46 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
-import { Home, Sparkles, BookOpen, Atom, Globe } from "lucide-react";
+import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { User as SupabaseUser } from "@supabase/supabase-js";
+import { useToast } from "@/hooks/use-toast";
 
 const Navigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } else {
+      navigate("/");
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+    }
+  };
   
   const navLinks = [
     { to: "/", label: "Home", icon: Home },
@@ -68,6 +104,34 @@ const Navigation = () => {
                 </Button>
               );
             })}
+            
+            {/* Auth Buttons */}
+            {user ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="gap-2"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden md:inline">Sign Out</span>
+                <span className="sr-only md:hidden">Sign Out</span>
+              </Button>
+            ) : (
+              <Button
+                asChild
+                variant="default"
+                size="sm"
+                className="gap-2"
+              >
+                <Link to="/auth" aria-label="Sign in to your account">
+                  <User className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden md:inline">Sign In</span>
+                  <span className="sr-only md:hidden">Sign In</span>
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

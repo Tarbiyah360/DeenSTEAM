@@ -8,6 +8,8 @@ import DailyWisdom from "./pages/DailyWisdom";
 import STEAMExplorerPage from "./pages/STEAMExplorerPage";
 import LessonGeneratorPage from "./pages/LessonGeneratorPage";
 import Community from "./pages/Community";
+import Auth from "./pages/Auth";
+import AmbassadorDashboard from "./pages/AmbassadorDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/steam-explorer" element={<STEAMExplorerPage />} />
           <Route path="/lesson-generator" element={<LessonGeneratorPage />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/ambassador-dashboard" element={<AmbassadorDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

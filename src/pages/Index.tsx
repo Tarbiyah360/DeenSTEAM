@@ -116,6 +116,29 @@ const Index = () => {
           </div>
         </section>
 
+        {/* STEAM Ambassador CTA */}
+        <section className="py-16 px-4 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10">
+          <div className="container mx-auto max-w-4xl text-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-4">
+                <Users className="h-10 w-10 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                Become a STEAM Ambassador
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Join a community of educators making a difference. Share your knowledge, inspire the next generation, and help bridge faith with science.
+              </p>
+              <Button asChild size="lg" className="gap-2">
+                <Link to="/auth">
+                  Join as Ambassador
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         {/* STEAM Explorer Preview */}
         <section className="py-20 px-4 bg-muted/30">
           <div className="container mx-auto max-w-6xl">
