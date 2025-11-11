@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import LessonGenerator from "@/components/LessonGenerator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { BookOpen, Sparkles, Globe, Atom } from "lucide-react";
+import { Sparkles, Globe, Atom } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -44,6 +45,11 @@ const Dashboard = () => {
             Welcome back, {user?.email}
           </p>
 
+          {/* Lesson Generator Section */}
+          <div className="mb-8">
+            <LessonGenerator />
+          </div>
+
           <div className="grid gap-6 md:grid-cols-2 mb-8">
             <Card>
               <CardHeader>
@@ -51,14 +57,6 @@ const Dashboard = () => {
                 <CardDescription>Access your favorite features</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-3">
-                <Button
-                  variant="outline"
-                  className="justify-start gap-3"
-                  onClick={() => navigate("/lesson-generator")}
-                >
-                  <BookOpen className="h-5 w-5" />
-                  Generate a Lesson
-                </Button>
                 <Button
                   variant="outline"
                   className="justify-start gap-3"
