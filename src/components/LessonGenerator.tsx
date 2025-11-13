@@ -23,7 +23,7 @@ interface LessonContent {
     description: string;
   };
   reflection: string;
-  scientist: {
+  scientist?: {
     name: string;
     link: string;
   };
