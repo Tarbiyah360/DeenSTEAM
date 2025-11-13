@@ -143,6 +143,9 @@ Important guidelines:
     const data = await response.json();
     let lessonContent = data.choices[0].message.content;
     
+    // Log raw response for debugging
+    console.log("Raw AI response length:", lessonContent.length);
+    
     // Strip markdown code fences if present
     lessonContent = lessonContent.trim();
     if (lessonContent.startsWith('```json')) {
@@ -155,7 +158,15 @@ Important guidelines:
     }
     lessonContent = lessonContent.trim();
     
-    const lesson = JSON.parse(lessonContent);
+    // Parse JSON with better error handling
+    let lesson;
+    try {
+      lesson = JSON.parse(lessonContent);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      console.error("Content that failed to parse (first 500 chars):", lessonContent.substring(0, 500));
+      throw new Error("Failed to parse AI response as JSON");
+    }
 
     console.log("Successfully generated lesson");
 
