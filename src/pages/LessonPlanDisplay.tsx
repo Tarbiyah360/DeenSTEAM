@@ -1,9 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Sparkles, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/Navigation";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface LessonData {
   title: string;
@@ -28,10 +31,13 @@ interface LessonData {
 const LessonPlanDisplay = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { lesson } = location.state as { lesson: LessonData } || {};
+  const { lesson: initialLesson, age } = location.state as { lesson: LessonData; age: number } || {};
+  
+  const [lesson, setLesson] = useState<LessonData | null>(initialLesson);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   if (!lesson) {
-    navigate('/dashboard');
+    navigate('/lesson-generator');
     return null;
   }
 
@@ -39,8 +45,39 @@ const LessonPlanDisplay = () => {
     window.print();
   };
 
-  const handleGenerateNew = () => {
-    navigate('/dashboard');
+  const handleGenerateNew = async () => {
+    if (!age) {
+      toast.error("Cannot generate new plan without age information");
+      return;
+    }
+
+    setIsGenerating(true);
+    
+    try {
+      const yearMap: Record<number, number> = {
+        5: 1, 6: 1, 7: 2, 8: 3, 9: 4, 10: 5, 11: 6
+      };
+      const year = yearMap[age];
+
+      const { data, error } = await supabase.functions.invoke('generate-lesson', {
+        body: { age, year }
+      });
+
+      if (error) throw error;
+
+      if (data?.lesson) {
+        setLesson(data.lesson);
+        toast.success("New lesson plan generated!");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error("No lesson data received");
+      }
+    } catch (error) {
+      console.error('Error generating new lesson:', error);
+      toast.error("Failed to generate new lesson plan. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -69,9 +106,10 @@ const LessonPlanDisplay = () => {
             <Button
               onClick={handleGenerateNew}
               className="gap-2"
+              disabled={isGenerating}
             >
               <Sparkles className="h-4 w-4" />
-              Generate New Plan
+              {isGenerating ? "Generating..." : "Generate New Plan"}
             </Button>
           </div>
         </div>
