@@ -66,7 +66,7 @@ const LessonGenerator = () => {
       if (error) throw error;
 
       // Navigate to the lesson plan display page with the lesson data
-      navigate('/lesson-plan', { state: { lesson: data.lesson } });
+      navigate('/lesson-plan', { state: { lesson: data.lesson, age: parseInt(age) } });
       
       toast({
         title: "Lesson Created!",

@@ -97,7 +97,7 @@ Return ONLY a JSON object (no markdown, no code blocks) with this EXACT structur
   "reflection": "Meaningful Islamic reflection connecting this science topic to Allah's perfect creation. Include a relevant Quranic verse or concept if applicable (e.g., signs in nature, balance in creation). End with SubhanAllah or Alhamdulillah and encourage gratitude through a short dua.",
   "scientist": {
     "name": "Name of a relevant Muslim scientist from the Islamic Golden Age who contributed to this field (from 1001 Inventions)",
-    "link": "/al-khwarizmi or /al-battani or /ibn-sina or /jabir-ibn-hayyan or /al-zahrawi or /fatima-al-fihri or /abbas-ibn-firnas or /al-jazari (choose the most relevant)"
+    "link": "/scientist/al-khwarizmi or /scientist/al-battani or /scientist/ibn-sina or /scientist/jabir-ibn-hayyan or /scientist/al-zahrawi or /scientist/fatima-al-fihri or /scientist/abbas-ibn-firnas or /scientist/al-jazari (choose the most relevant)"
   }
 }
 
