@@ -36,13 +36,23 @@ serve(async (req) => {
   }
 
   try {
-    const { topic } = await req.json();
+    const { topic, age, year } = await req.json();
 
     // Validate topic input
     const validation = validateTopic(topic);
     if (!validation.valid) {
       return new Response(
         JSON.stringify({ error: validation.error }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
+    if (!age || !year || age < 5 || age > 11 || year < 1 || year > 6) {
+      return new Response(
+        JSON.stringify({ error: "Valid age (5-11) and year (1-6) are required" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -57,7 +67,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log(`Generating lesson for topic: ${sanitizedTopic}`);
+    console.log(`Generating lesson for topic: ${sanitizedTopic}, age: ${age}, year: ${year}`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -70,25 +80,54 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are an expert Islamic educator combining tarbiyah (Islamic upbringing) with STEAM learning.
+            content: `You are an expert Islamic educator creating DeenSTEAM lesson plans that combine STEM education with Islamic values for UK primary school children.
 
-For any given topic, create a comprehensive lesson with these 4 components:
+Create a comprehensive, child-friendly lesson plan in the style shown in the example. The lesson must be:
+- Age-appropriate for ${age} year old children in Year ${year}
+- Aligned with UK National Curriculum Science standards for Year ${year}
+- Written in a warm, encouraging tone speaking directly to children
+- Enriched with Islamic reflections on Allah's creation
 
-1. **Qur'anic Verse or Story**: Find a relevant verse from the Qur'an or a story from Islamic tradition that relates to the topic. Include the Surah name and verse number. Make it engaging for children.
+Return a JSON object with these keys:
 
-2. **Muslim Inventor/Scientist**: Identify a Muslim scholar, scientist, or inventor from Islamic history (like those featured in 1001 Inventions) who contributed to this field. Explain their contribution in simple terms.
+{
+  "title": "Exciting, child-friendly title (e.g., 'Super Sound Explorers!')",
+  "ageGroup": "Year ${year} Science Lesson Plan",
+  "objectives": ["Array of 4-5 specific learning objectives starting with action verbs like 'Understand', 'Identify', 'Explore', 'Learn'"],
+  "materials": ["Array of 6-8 common household items needed, simple and specific"],
+  "activities": [
+    {
+      "title": "Activity name (e.g., 'Vibration Station!')",
+      "description": "Detailed, step-by-step instructions speaking to children. Make it fun and engaging with questions and observations to guide them."
+    },
+    {
+      "title": "Second activity name",
+      "description": "Another hands-on activity with clear instructions"
+    }
+  ],
+  "tryAtHome": {
+    "title": "Home activity name",
+    "description": "A fun experiment or project children can do at home with adult help. Include what to observe and questions to explore."
+  },
+  "reflection": "A thoughtful Islamic reflection connecting the topic to Allah's creation and wisdom. Include a simple dua or reminder to be grateful.",
+  "scientist": {
+    "name": "Name of relevant Muslim scientist from history",
+    "link": "/scientist/scientist-kebab-case"
+  }
+}
 
-3. **Hands-on Activity**: Suggest a fun, practical activity children can do to explore this topic. Make it age-appropriate (5-12 years) and doable at home with common materials.
-
-4. **Reflection and Dua**: Provide a thoughtful question for reflection and a simple dua (prayer) related to the topic that children can memorize.
-
-Keep each section to 2-4 sentences. Be warm, encouraging, and educational.
-
-Return your response as a JSON object with these keys: verse, inventor, activity, reflection`,
+Important guidelines:
+- Keep instructions clear and age-appropriate
+- Use engaging language that speaks to children
+- Include observations and questions in activity descriptions
+- Make connections to real-world applications
+- Ensure Islamic reflections are meaningful and age-appropriate
+- Activities should use common household items
+- Link to one of these scientists if relevant: /scientist/al-battani, /scientist/jabir-ibn-hayyan, /scientist/ibn-sina, /scientist/al-khwarizmi`,
           },
           {
             role: "user",
-            content: `Create a lesson about: ${sanitizedTopic}`,
+            content: `Create a Year ${year} Science lesson plan about: ${sanitizedTopic}`,
           },
         ],
         response_format: { type: "json_object" },
