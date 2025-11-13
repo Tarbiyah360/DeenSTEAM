@@ -11,6 +11,10 @@ import AlBattaniPage from "./pages/AlBattaniPage";
 import JabirIbnHayyanPage from "./pages/JabirIbnHayyanPage";
 import IbnSinaPage from "./pages/IbnSinaPage";
 import AlKhwarizmiPage from "./pages/AlKhwarizmiPage";
+import AlZahrawiPage from "./pages/AlZahrawiPage";
+import FatimaAlFihriPage from "./pages/FatimaAlFihriPage";
+import AbbasIbnFirnasPage from "./pages/AbbasIbnFirnasPage";
+import AlJazariPage from "./pages/AlJazariPage";
 import LessonGeneratorPage from "./pages/LessonGeneratorPage";
 import LessonPlanDisplay from "./pages/LessonPlanDisplay";
 import SavedLessons from "./pages/SavedLessons";
@@ -39,6 +43,10 @@ const App = () => (
             <Route path="/scientist/jabir-ibn-hayyan" element={<JabirIbnHayyanPage />} />
             <Route path="/scientist/ibn-sina" element={<IbnSinaPage />} />
             <Route path="/scientist/al-khwarizmi" element={<AlKhwarizmiPage />} />
+            <Route path="/scientist/al-zahrawi" element={<AlZahrawiPage />} />
+            <Route path="/scientist/fatima-al-fihri" element={<FatimaAlFihriPage />} />
+            <Route path="/scientist/abbas-ibn-firnas" element={<AbbasIbnFirnasPage />} />
+            <Route path="/scientist/al-jazari" element={<AlJazariPage />} />
             <Route path="/lesson-generator" element={<LessonGeneratorPage />} />
             <Route path="/lesson-plan" element={<LessonPlanDisplay />} />
             <Route path="/saved-lessons" element={<SavedLessons />} />

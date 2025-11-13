@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Invention {
@@ -30,17 +30,31 @@ const ScientistProfile = ({
 }: ScientistProfileProps) => {
   const navigate = useNavigate();
 
+  const handleDownloadProfile = () => {
+    window.print();
+  };
+
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="container mx-auto max-w-4xl">
-        <Button
-          onClick={() => navigate("/steam-explorer")}
-          variant="ghost"
-          className="mb-6 gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to STEAM Explorer
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            onClick={() => navigate("/steam-explorer")}
+            variant="ghost"
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to STEAM Explorer
+          </Button>
+          <Button
+            onClick={handleDownloadProfile}
+            variant="outline"
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Download Profile
+          </Button>
+        </div>
 
         {/* Header */}
         <div className="text-center mb-12">
