@@ -19,7 +19,7 @@ interface LessonData {
     description: string;
   };
   reflection: string;
-  scientist: {
+  scientist?: {
     name: string;
     link: string;
   };
@@ -167,20 +167,22 @@ const LessonPlanDisplay = () => {
             </div>
 
             {/* Muslim Heritage Connection */}
-            <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">⭐</span>
-                <h3 className="text-xl font-semibold text-primary">Muslim Heritage Connection</h3>
+            {lesson.scientist && (
+              <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-2xl">⭐</span>
+                  <h3 className="text-xl font-semibold text-primary">Muslim Heritage Connection</h3>
+                </div>
+                <p className="text-foreground mb-3">
+                  Learn more about <button
+                    onClick={() => navigate(lesson.scientist.link)}
+                    className="text-primary underline font-semibold hover:text-primary/80"
+                  >
+                    {lesson.scientist.name}
+                  </button>, a brilliant Muslim scientist who contributed to this field!
+                </p>
               </div>
-              <p className="text-foreground mb-3">
-                Learn more about <button
-                  onClick={() => navigate(lesson.scientist.link)}
-                  className="text-primary underline font-semibold hover:text-primary/80"
-                >
-                  {lesson.scientist.name}
-                </button>, a brilliant Muslim scientist who contributed to this field!
-              </p>
-            </div>
+            )}
 
             {/* Reflecting on Allah's Creation */}
             <div className="bg-secondary/10 p-6 rounded-lg border-2 border-secondary/30">
