@@ -25,6 +25,7 @@ interface LessonData {
   scientist?: {
     name: string;
     link: string;
+    biography: string;
   };
 }
 
@@ -207,18 +208,25 @@ const LessonPlanDisplay = () => {
             {/* Muslim Heritage Connection */}
             {lesson.scientist && (
               <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-4">
                   <span className="text-2xl">⭐</span>
                   <h3 className="text-xl font-semibold text-primary">Muslim Heritage Connection</h3>
                 </div>
-                <p className="text-foreground mb-3">
-                  Learn more about <button
-                    onClick={() => navigate(lesson.scientist.link)}
-                    className="text-primary underline font-semibold hover:text-primary/80"
-                  >
+                <div className="space-y-3">
+                  <p className="text-foreground font-semibold text-lg">
                     {lesson.scientist.name}
-                  </button>, a brilliant Muslim scientist who contributed to this field!
-                </p>
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {lesson.scientist.biography}
+                  </p>
+                  <Button
+                    onClick={() => navigate(lesson.scientist.link)}
+                    variant="outline"
+                    className="mt-2"
+                  >
+                    Learn more about {lesson.scientist.name}
+                  </Button>
+                </div>
               </div>
             )}
 
