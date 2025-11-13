@@ -26,6 +26,7 @@ interface LessonContent {
   scientist?: {
     name: string;
     link: string;
+    biography: string;
   };
 }
 
