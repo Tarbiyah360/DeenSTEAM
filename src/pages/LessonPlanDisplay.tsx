@@ -28,7 +28,7 @@ interface LessonData {
 const LessonPlanDisplay = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { lesson, topic } = location.state as { lesson: LessonData; topic: string } || {};
+  const { lesson } = location.state as { lesson: LessonData } || {};
 
   if (!lesson) {
     navigate('/dashboard');
