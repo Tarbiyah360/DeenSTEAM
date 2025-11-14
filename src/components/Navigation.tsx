@@ -75,11 +75,11 @@ const Navigation = () => {
           <Link 
             to="/" 
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
-            aria-label="Tarbiyah360 home page"
+            aria-label="DeenSTEAM home page"
           >
-            <img src={logo} alt="Tarbiyah360 logo - Islamic education platform" className="w-8 h-8 sm:w-10 sm:h-10" />
+            <img src={logo} alt="DeenSTEAM logo - Islamic education platform" className="w-8 h-8 sm:w-10 sm:h-10" />
             <span className="font-bold text-lg sm:text-xl text-foreground" aria-hidden="true">
-              Tarbiyah360°
+              DeenSTEAM
             </span>
           </Link>
 
