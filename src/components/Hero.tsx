@@ -29,14 +29,14 @@ const Hero = () => {
           <div className="flex justify-center mb-6">
             <img 
               src={logo} 
-              alt="Tarbiyah360 logo featuring a crescent moon and stars" 
+              alt="DeenSTEAM logo featuring a crescent moon and stars" 
               className="w-24 h-24 animate-in fade-in zoom-in duration-700"
             />
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight animate-in slide-in-from-bottom-4 duration-700">
-            Tarbiyah360°
+            DeenSTEAM
           </h1>
           
           <p className="text-xl sm:text-2xl md:text-3xl text-primary-foreground/90 font-light animate-in slide-in-from-bottom-4 duration-700 delay-150">

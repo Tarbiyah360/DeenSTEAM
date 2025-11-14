@@ -119,9 +119,9 @@ const Auth = () => {
         <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <img src={logo} alt="Tarbiyah360 logo" className="w-16 h-16" />
+            <img src={logo} alt="DeenSTEAM logo" className="w-16 h-16" />
           </div>
-          <CardTitle className="text-2xl">Welcome to Tarbiyah360°</CardTitle>
+          <CardTitle className="text-2xl">Welcome to DeenSTEAM</CardTitle>
           <CardDescription>Sign in or create an account to continue</CardDescription>
         </CardHeader>
 
