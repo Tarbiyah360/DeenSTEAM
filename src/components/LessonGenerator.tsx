@@ -100,6 +100,33 @@ const LessonGenerator = () => {
           </p>
         </div>
 
+        {/* Process Instructions */}
+        <div className="max-w-3xl mx-auto mb-8">
+          <Card className="p-6 bg-muted/50 border-border/50">
+            <h3 className="text-lg font-semibold text-foreground mb-4 text-center">How It Works</h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold mb-2">
+                  1
+                </div>
+                <p className="text-sm text-muted-foreground">Select your child's age</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold mb-2">
+                  2
+                </div>
+                <p className="text-sm text-muted-foreground">Click generate to create a custom lesson</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold mb-2">
+                  3
+                </div>
+                <p className="text-sm text-muted-foreground">View and save your personalized lesson plan</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* Input Section */}
         <Card className="p-6 md:p-8 mb-8 shadow-lg border-border/50">
           <form 
