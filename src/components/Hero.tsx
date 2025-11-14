@@ -54,7 +54,7 @@ const Hero = () => {
               size="lg"
               variant="outline"
               asChild
-              className="border-2 border-primary-foreground/30 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full backdrop-blur-sm"
+              className="border-2 border-gold bg-gold/90 hover:bg-gold text-foreground font-semibold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full backdrop-blur-sm"
             >
               <Link to="/lesson-generator">
                 <BookOpen className="mr-2 h-4 sm:h-5 w-4 sm:w-5" aria-hidden="true" />
