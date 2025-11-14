@@ -82,86 +82,127 @@ IMPORTANT REQUIREMENTS:
 9. Include praise (SubhanAllah, Alhamdulillah) and duas (prayers) in reflections
 
 REFERENCES FOR INSPIRATION:
-- Scientific facts mentioned in the Quran (natural phenomena, creation, heavens and earth)
-- 1001 Inventions and contributions from Muslim heritage
-- Teaching with Islamic values of curiosity, observation, and gratitude
-
-Return ONLY a JSON object (no markdown, no code blocks) with this EXACT structure:
-
-{
-  "title": "Exciting, child-friendly title speaking to children (e.g., 'Amazing Plants Around Us!' or 'Super Sound Explorers!')",
-  "ageGroup": "Year ${year} (Ages ${age}-${age + 1})",
-  "objectives": ["Array of 4-5 specific learning objectives aligned with UK curriculum", "Start with action verbs like 'Understand', 'Identify', 'Explore', 'Learn'", "Make them achievable for this age group"],
-  "materials": ["List 6-8 common household or school items needed", "Be specific (e.g., 'plastic bottle' not 'container')", "Keep items simple and accessible"],
-  "activities": [
-    {
-      "title": "Activity 1 Title (ONE MUST BE A CRAFT - making/building/creating something physical)",
-      "description": "Detailed step-by-step instructions speaking directly to children. Make it fun and engaging with questions and observations to guide them. If this is the craft activity, clearly describe what they will make/build/create."
-    },
-    {
-      "title": "Activity 2 Title (if Activity 1 wasn't a craft, THIS MUST BE A CRAFT)",
-      "description": "Another hands-on activity with clear instructions. Include what children will observe, discover, or create."
-    }
-  ],
-  "tryAtHome": {
-    "title": "Fun Home Activity Title",
-    "description": "A simple experiment or project children can do at home with adult supervision. Include what to observe, questions to explore, and an Islamic reflection connecting to Allah's creation with praise (SubhanAllah/Alhamdulillah) and a short dua."
-  },
-  "reflection": "Meaningful Islamic reflection connecting this science topic to Allah's perfect creation. Include a relevant Quranic verse or concept if applicable (e.g., signs in nature, balance in creation). End with SubhanAllah or Alhamdulillah and encourage gratitude through a short dua.",
-  "scientist": {
-    "name": "Name of a relevant Muslim scientist from the Islamic Golden Age who contributed to this field (from 1001 Inventions)",
-    "link": "/scientist/al-khwarizmi or /scientist/al-battani or /scientist/ibn-sina or /scientist/jabir-ibn-hayyan or /scientist/al-zahrawi or /scientist/fatima-al-fihri or /scientist/abbas-ibn-firnas or /scientist/al-jazari (choose the most relevant)",
-    "biography": "Write 2-3 engaging sentences about this scientist's life and achievements. Include when/where they lived and their key contributions that relate to this lesson topic. Make it child-friendly and inspiring."
-  }
-}
-
-CRITICAL: Ensure ONE activity is clearly a CRAFT (making, building, creating something tangible).
-Make it engaging, educational, spiritually enriching, and perfectly suited for ${age} year old children!`,
+- 1001 Inventions resources
+- UK National Curriculum Science standards
+- Teaching with Islamic values of curiosity, observation, and gratitude`,
           },
           {
             role: "user",
             content: `Create an engaging Year ${year} Science lesson plan based on the UK National Curriculum. Remember: ONE activity must be a craft activity where children make or build something!`,
           },
         ],
-        response_format: { type: "json_object" },
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "create_lesson_plan",
+              description: "Create a comprehensive DeenSTEAM lesson plan",
+              parameters: {
+                type: "object",
+                properties: {
+                  title: {
+                    type: "string",
+                    description: "Exciting, child-friendly title speaking to children (e.g., 'Amazing Plants Around Us!' or 'Super Sound Explorers!')"
+                  },
+                  ageGroup: {
+                    type: "string",
+                    description: `Year ${year} (Ages ${age}-${age + 1})`
+                  },
+                  objectives: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "4-5 specific learning objectives aligned with UK curriculum, starting with action verbs"
+                  },
+                  materials: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "6-8 common household or school items needed, be specific"
+                  },
+                  activities: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        title: { type: "string" },
+                        description: { type: "string" }
+                      },
+                      required: ["title", "description"]
+                    },
+                    description: "Two hands-on activities, ONE MUST BE A CRAFT where children make/build/create something"
+                  },
+                  tryAtHome: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      description: { type: "string" }
+                    },
+                    required: ["title", "description"],
+                    description: "A simple experiment or project for home with Islamic reflection"
+                  },
+                  reflection: {
+                    type: "string",
+                    description: "Meaningful Islamic reflection connecting to Allah's creation, include Quranic verse if relevant"
+                  },
+                  scientist: {
+                    type: "object",
+                    properties: {
+                      name: { type: "string" },
+                      link: { type: "string" },
+                      biography: { type: "string" }
+                    },
+                    required: ["name", "link", "biography"],
+                    description: "A Muslim scientist from Islamic Golden Age relevant to this topic"
+                  }
+                },
+                required: ["title", "ageGroup", "objectives", "materials", "activities", "tryAtHome", "reflection", "scientist"],
+                additionalProperties: false
+              }
+            }
+          }
+        ],
+        tool_choice: { type: "function", function: { name: "create_lesson_plan" } }
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
       console.error("AI API error:", response.status, errorData);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "AI service payment required. Please contact support." }),
+          {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      
       throw new Error(`AI API error: ${response.status}`);
     }
 
     const data = await response.json();
-    let lessonContent = data.choices[0].message.content;
+    console.log("AI response received successfully");
     
-    // Log raw response for debugging
-    console.log("Raw AI response length:", lessonContent.length);
-    
-    // Strip markdown code fences if present
-    lessonContent = lessonContent.trim();
-    if (lessonContent.startsWith('```json')) {
-      lessonContent = lessonContent.slice(7); // Remove ```json
-    } else if (lessonContent.startsWith('```')) {
-      lessonContent = lessonContent.slice(3); // Remove ```
-    }
-    if (lessonContent.endsWith('```')) {
-      lessonContent = lessonContent.slice(0, -3); // Remove trailing ```
-    }
-    lessonContent = lessonContent.trim();
-    
-    // Parse JSON with better error handling
-    let lesson;
-    try {
-      lesson = JSON.parse(lessonContent);
-    } catch (parseError) {
-      console.error("JSON parse error:", parseError);
-      console.error("Content that failed to parse (first 500 chars):", lessonContent.substring(0, 500));
-      throw new Error("Failed to parse AI response as JSON");
+    // Extract the tool call result
+    const toolCall = data.choices[0].message.tool_calls?.[0];
+    if (!toolCall || toolCall.function.name !== "create_lesson_plan") {
+      console.error("No valid tool call in response");
+      throw new Error("Failed to generate lesson plan");
     }
 
-    console.log("Successfully generated lesson");
+    const lesson = JSON.parse(toolCall.function.arguments);
+    console.log("Successfully parsed lesson plan");
 
     return new Response(
       JSON.stringify({ lesson }),
