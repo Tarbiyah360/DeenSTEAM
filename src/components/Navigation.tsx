@@ -45,14 +45,16 @@ const Navigation = () => {
     }
   };
   
-  const navLinks = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles },
-    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom },
-    { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen },
-    { to: "/saved-lessons", label: "Saved Lessons", icon: BookOpen },
-    { to: "/community", label: "Community", icon: Globe },
+  const allNavLinks = [
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, requireAuth: true },
+    { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles, requireAuth: true },
+    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom, requireAuth: false },
+    { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen, requireAuth: false },
+    { to: "/saved-lessons", label: "Saved Lessons", icon: BookOpen, requireAuth: true },
+    { to: "/community", label: "Community", icon: Globe, requireAuth: true },
   ];
+
+  const navLinks = allNavLinks.filter(link => !link.requireAuth || user);
 
   return (
     <>
