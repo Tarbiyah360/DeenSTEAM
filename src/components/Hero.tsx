@@ -52,16 +52,6 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4 sm:pt-6 animate-in slide-in-from-bottom-4 duration-700 delay-500">
             <Button 
               size="lg"
-              asChild
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-            >
-              <Link to="/daily-wisdom">
-                <Sparkles className="mr-2 h-4 sm:h-5 w-4 sm:w-5" aria-hidden="true" />
-                Get Daily Wisdom
-              </Link>
-            </Button>
-            <Button 
-              size="lg"
               variant="outline"
               asChild
               className="border-2 border-primary-foreground/30 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-semibold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full backdrop-blur-sm"
