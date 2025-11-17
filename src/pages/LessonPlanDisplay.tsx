@@ -16,6 +16,7 @@ interface LessonData {
   activities: Array<{
     title: string;
     description: string;
+    imageUrl?: string;
   }>;
   tryAtHome: {
     title: string;
@@ -177,15 +178,26 @@ const LessonPlanDisplay = () => {
                 <span className="text-2xl">⚡</span>
                 <h3 className="text-xl font-semibold text-accent">Fun Activities</h3>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {lesson.activities.map((activity, index) => (
-                  <div key={index} className="bg-muted/30 p-5 rounded-lg border border-border/50">
-                    <h4 className="font-semibold text-lg text-foreground mb-2">
-                      {index + 1}. {activity.title}
-                    </h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {activity.description}
-                    </p>
+                  <div key={index} className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1 bg-muted/30 p-5 rounded-lg border border-border/50">
+                      <h4 className="font-semibold text-lg text-foreground mb-2">
+                        {index + 1}. {activity.title}
+                      </h4>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {activity.description}
+                      </p>
+                    </div>
+                    {activity.imageUrl && (
+                      <Card className="w-full md:w-64 overflow-hidden shadow-lg">
+                        <img 
+                          src={activity.imageUrl} 
+                          alt={activity.title}
+                          className="w-full h-48 object-cover"
+                        />
+                      </Card>
+                    )}
                   </div>
                 ))}
               </div>
