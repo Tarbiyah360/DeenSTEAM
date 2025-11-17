@@ -124,11 +124,15 @@ REFERENCES FOR INSPIRATION:
                       type: "object",
                       properties: {
                         title: { type: "string" },
-                        description: { type: "string" }
+                        description: { type: "string" },
+                        imagePrompt: { 
+                          type: "string",
+                          description: "A detailed visual description for generating an illustration of this activity, suitable for children" 
+                        }
                       },
-                      required: ["title", "description"]
+                      required: ["title", "description", "imagePrompt"]
                     },
-                    description: "Two hands-on activities, ONE MUST BE A CRAFT where children make/build/create something"
+                    description: "Two hands-on activities, ONE MUST BE A CRAFT where children make/build/create something. Include imagePrompt for each activity."
                   },
                   tryAtHome: {
                     type: "object",
@@ -203,6 +207,48 @@ REFERENCES FOR INSPIRATION:
 
     const lesson = JSON.parse(toolCall.function.arguments);
     console.log("Successfully parsed lesson plan");
+
+    // Generate images for each activity
+    console.log("Generating activity illustrations...");
+    const activitiesWithImages = await Promise.all(
+      lesson.activities.map(async (activity: any) => {
+        try {
+          const imageResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "google/gemini-2.5-flash-image-preview",
+              messages: [
+                {
+                  role: "user",
+                  content: `Create a colorful, child-friendly educational illustration: ${activity.imagePrompt}. Make it vibrant, engaging, and suitable for primary school children.`
+                }
+              ],
+              modalities: ["image", "text"]
+            })
+          });
+
+          if (imageResponse.ok) {
+            const imageData = await imageResponse.json();
+            const imageUrl = imageData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+            if (imageUrl) {
+              console.log(`Generated image for activity: ${activity.title}`);
+              return { ...activity, imageUrl };
+            }
+          }
+          console.log(`Failed to generate image for activity: ${activity.title}`);
+          return activity;
+        } catch (error) {
+          console.error(`Error generating image for activity ${activity.title}:`, error);
+          return activity;
+        }
+      })
+    );
+
+    lesson.activities = activitiesWithImages;
 
     return new Response(
       JSON.stringify({ lesson }),
