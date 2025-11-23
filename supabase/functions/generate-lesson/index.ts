@@ -1,269 +1,281 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import OpenAI from "https://deno.land/x/openai@v4.24.0/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+// Very simple topic safety filter for child-facing lessons
+const BLOCKED_KEYWORDS = [
+  // sexual / adult themes
+  "sex",
+  "sexual",
+  "porn",
+  "pornography",
+  "nude",
+  "naked",
+  "lesbian",
+  "gay",
+  "homosexual",
+  "lgbt",
+  "transgender",
+  "bisexual",
+  "dating",
+  "boyfriend",
+  "girlfriend",
+  "kiss",
+  "romance",
+  "romantic",
+  "erotic",
+  // drugs / alcohol
+  "alcohol",
+  "wine",
+  "beer",
+  "drugs",
+  "cocaine",
+  "marijuana",
+  "weed",
+  // violence / self-harm (you can tune these)
+  "suicide",
+  "self-harm",
+  "murder",
+  "kill",
+  "killing",
+  "terrorist",
+  // non-Islamic religion topics for kids
+  "christianity",
+  "hinduism",
+  "buddhism",
+  "atheism",
+  "idol worship",
+  "cross",
+  "church",
+  "temple",
+];
+
+serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    // Validate authentication
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      console.error("Missing authorization header");
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
+  if (req.method !== "POST") {
+    return new Response(
+      JSON.stringify({ error: "Method not allowed" }),
+      {
+        status: 405,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
 
-    const { age, year } = await req.json();
-    
-    if (!age || !year || age < 5 || age > 11 || year < 1 || year > 6) {
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(
+      JSON.stringify({ error: "Invalid JSON body" }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
+
+  const age = Number(body.age);
+  const year = Number(body.year);
+
+  // Keep original topic string (for UX) and a lowercased version for filtering
+  const rawTopic: string | undefined =
+    typeof body.topic === "string"
+      ? body.topic
+      : typeof body.subject === "string"
+      ? body.subject
+      : undefined;
+
+  const normalizedTopic = rawTopic?.toLowerCase().trim();
+
+  if (!age || !year || age < 5 || age > 11 || year < 1 || year > 6) {
+    return new Response(
+      JSON.stringify({
+        error: "Valid age (5–11) and year (1–6) are required",
+      }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
+  }
+
+  // 🔐 Safety filter: block clearly unsuitable topics for child lessons
+  if (normalizedTopic) {
+    const isBlocked = BLOCKED_KEYWORDS.some((word) =>
+      normalizedTopic.includes(word)
+    );
+
+    if (isBlocked) {
+      console.warn("Blocked topic received:", rawTopic);
+
       return new Response(
-        JSON.stringify({ error: "Valid age (5-11) and year (1-6) are required" }),
+        JSON.stringify({
+          error:
+            "This topic is not supported for child lessons in this app. Please choose a different, child-safe topic (e.g. plants, animals, light, space, weather).",
+          code: "BLOCKED_TOPIC",
+        }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+        },
       );
     }
+  }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
-
-    console.log(`Generating lesson for age: ${age}, year: ${year}`);
-    
-    // Map year to curriculum URL
-    const curriculumUrls: Record<number, string> = {
-      1: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-1-programme-of-study",
-      2: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-2-programme-of-study",
-      3: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-3-programme-of-study",
-      4: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-4-programme-of-study",
-      5: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-5-programme-of-study",
-      6: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-6-programme-of-study",
-    };
-
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: `You are an expert Islamic educator creating DeenSTEAM lesson plans that combine STEM education with Islamic values for UK primary school children.
-
-Create a comprehensive, child-friendly lesson plan for Year ${year} children (age ${age}) based on the UK National Curriculum for Science.
-
-CURRICULUM REFERENCE: ${curriculumUrls[year]}
-
-IMPORTANT REQUIREMENTS:
-1. Select an appropriate science topic from the Year ${year} UK National Curriculum
-2. ONE of the two activities MUST be a hands-on CRAFT activity suitable for children (e.g., making a model, creating art, building something)
-3. Align strictly with curriculum standards for Year ${year}
-4. Use simple, child-friendly language appropriate for ${age} year olds
-5. Include Islamic reflections connecting the science to Allah's creation with Quranic verses where relevant
-6. Reference Muslim scientists from the Islamic Golden Age (1001 Inventions) and their contributions to this field
-7. Activities should be hands-on, engaging, and age-appropriate
-8. Include materials that are easily accessible at home or school
-9. Include praise (SubhanAllah, Alhamdulillah) and duas (prayers) in reflections
-
-REFERENCES FOR INSPIRATION:
-- 1001 Inventions resources
-- UK National Curriculum Science standards
-- Teaching with Islamic values of curiosity, observation, and gratitude`,
-          },
-          {
-            role: "user",
-            content: `Create an engaging Year ${year} Science lesson plan based on the UK National Curriculum. Remember: ONE activity must be a craft activity where children make or build something!`,
-          },
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "create_lesson_plan",
-              description: "Create a comprehensive DeenSTEAM lesson plan",
-              parameters: {
-                type: "object",
-                properties: {
-                  title: {
-                    type: "string",
-                    description: "Exciting, child-friendly title speaking to children (e.g., 'Amazing Plants Around Us!' or 'Super Sound Explorers!')"
-                  },
-                  ageGroup: {
-                    type: "string",
-                    description: `Year ${year} (Ages ${age}-${age + 1})`
-                  },
-                  objectives: {
-                    type: "array",
-                    items: { type: "string" },
-                    description: "4-5 specific learning objectives aligned with UK curriculum, starting with action verbs"
-                  },
-                  materials: {
-                    type: "array",
-                    items: { type: "string" },
-                    description: "6-8 common household or school items needed, be specific"
-                  },
-                  activities: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        title: { type: "string" },
-                        description: { type: "string" },
-                        imagePrompt: { 
-                          type: "string",
-                          description: "A detailed visual description for generating an illustration of this activity, suitable for children" 
-                        }
-                      },
-                      required: ["title", "description", "imagePrompt"]
-                    },
-                    description: "Two hands-on activities, ONE MUST BE A CRAFT where children make/build/create something. Include imagePrompt for each activity."
-                  },
-                  tryAtHome: {
-                    type: "object",
-                    properties: {
-                      title: { type: "string" },
-                      description: { type: "string" }
-                    },
-                    required: ["title", "description"],
-                    description: "A simple experiment or project for home with Islamic reflection"
-                  },
-                  reflection: {
-                    type: "string",
-                    description: "Meaningful Islamic reflection connecting to Allah's creation, include Quranic verse if relevant"
-                  },
-                  scientist: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string" },
-                      link: { type: "string" },
-                      biography: { type: "string" }
-                    },
-                    required: ["name", "link", "biography"],
-                    description: "A Muslim scientist from Islamic Golden Age relevant to this topic"
-                  }
-                },
-                required: ["title", "ageGroup", "objectives", "materials", "activities", "tryAtHome", "reflection", "scientist"],
-                additionalProperties: false
-              }
-            }
-          }
-        ],
-        tool_choice: { type: "function", function: { name: "create_lesson_plan" } }
+  const apiKey = Deno.env.get("OPENAI_API_KEY");
+  if (!apiKey) {
+    console.error("Missing OPENAI_API_KEY");
+    return new Response(
+      JSON.stringify({
+        error: "Server misconfigured: OPENAI_API_KEY not set",
       }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("AI API error:", response.status, errorData);
-      
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }),
-          {
-            status: 429,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-      
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "AI service payment required. Please contact support." }),
-          {
-            status: 402,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-      
-      throw new Error(`AI API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("AI response received successfully");
-    
-    // Extract the tool call result
-    const toolCall = data.choices[0].message.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== "create_lesson_plan") {
-      console.error("No valid tool call in response");
-      throw new Error("Failed to generate lesson plan");
-    }
-
-    const lesson = JSON.parse(toolCall.function.arguments);
-    console.log("Successfully parsed lesson plan");
-
-    // Generate images for each activity
-    console.log("Generating activity illustrations...");
-    const activitiesWithImages = await Promise.all(
-      lesson.activities.map(async (activity: any) => {
-        try {
-          const imageResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "google/gemini-2.5-flash-image-preview",
-              messages: [
-                {
-                  role: "user",
-                  content: `Create a colorful, child-friendly educational illustration: ${activity.imagePrompt}. Make it vibrant, engaging, and suitable for primary school children.`
-                }
-              ],
-              modalities: ["image", "text"]
-            })
-          });
-
-          if (imageResponse.ok) {
-            const imageData = await imageResponse.json();
-            const imageUrl = imageData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-            if (imageUrl) {
-              console.log(`Generated image for activity: ${activity.title}`);
-              return { ...activity, imageUrl };
-            }
-          }
-          console.log(`Failed to generate image for activity: ${activity.title}`);
-          return activity;
-        } catch (error) {
-          console.error(`Error generating image for activity ${activity.title}:`, error);
-          return activity;
-        }
-      })
-    );
-
-    lesson.activities = activitiesWithImages;
-
-    return new Response(
-      JSON.stringify({ lesson }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
-  } catch (error) {
-    console.error("Error in generate-lesson function:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      },
+    );
+  }
+
+  const openai = new OpenAI({ apiKey });
+
+  const SYSTEM_PROMPT = `
+You are an expert DeenSTEAM educator creating Islamic-friendly, child-safe STEM lesson plans.
+
+GENERAL RULES
+- Your primary goal is to create ONE structured, age-appropriate science/STEAM lesson for children.
+- The audience are Muslim children, supervised by their mothers.
+- The app is strictly child-focused and Islamic-aligned. Content must be modest, age-appropriate, and aligned with Islamic values.
+
+TOPIC HANDLING
+- If the user provides a topic, you MUST keep that topic wording and build the lesson around it. Do NOT silently change the topic.
+- If the topic is unusual for science (e.g. "heaven"), keep the same wording but connect it to the natural world in a gentle, reflective way (e.g. sky, stars, creation, feelings) suitable for the child's age.
+- If the input topic is clearly unsuitable for children (sexual content, dating, pornography, LGBTQ themes, explicit violence, non-Islamic worship rituals), you MUST NOT create a lesson. Instead, respond with a JSON object of the form:
+{
+  "error": "UNSUITABLE_TOPIC",
+  "message": "This topic is not suitable for a child-focused Islamic lesson."
+}
+and nothing else.
+
+ISLAMIC SAFETY
+- You may refer to Islamic values (e.g. gratitude, amanah, khalifah on earth, reflection on Allah's creation).
+- Do NOT invent exact Qur'an ayat or hadith text.
+- Do NOT fabricate surah names or hadith references.
+- Keep references general unless you are explicitly given the text and source.
+- Do NOT discuss intimate sexual details, LGBTQ identities, dating culture, or romantic relationships in lessons for children.
+
+RETURN FORMAT
+Return JSON ONLY with this structure when the topic is acceptable:
+
+{
+  "title": string,
+  "ageGroup": string,
+  "yearGroup": string,
+  "topic": string,
+  "objectives": string[],
+  "materials": string[],
+  "activities": [
+    {
+      "title": string,
+      "description": string,
+      "imagePrompt": string
+    }
+  ],
+  "tryAtHome": {
+    "title": string,
+    "description": string,
+    "imagePrompt": string
+  },
+  "reflection": string,
+  "scientists": [
+    {
+      "name": string,
+      "contribution": string
+    }
+  ],
+  "islamicIntegration": {
+    "theme": string,
+    "summary": string,
+    "reflectionPrompt": string
+  }
+}
+`.trim();
+
+  const USER_MESSAGE = rawTopic
+    ? `
+Create an engaging lesson for a child.
+
+Child age: ${age}
+Year group: ${year}
+Use this EXACT topic: "${rawTopic}". Do NOT change the topic wording.
+If it is not normally a science topic, connect it gently to science/STEAM or the natural world (e.g. sky, earth, animals, creation) in a way that is suitable for a Muslim child of this age.
+`.trim()
+    : `
+Create an engaging science/STEAM lesson.
+
+Child age: ${age}
+Year group: ${year}
+Choose a suitable general science topic for this age (e.g. plants, animals, light, sound, weather, simple forces).
+`.trim();
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      temperature: 0.4,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: USER_MESSAGE },
+      ],
+    });
+
+    const content = completion.choices?.[0]?.message?.content || "{}";
+
+    // Parse the JSON string and wrap it as { lesson: ... }
+    let parsed;
+    try {
+      parsed = JSON.parse(content);
+    } catch {
+      console.error("Failed to parse OpenAI JSON:", content);
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON from model" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // If model decided the topic is unsuitable, pass the error through
+    if (parsed?.error) {
+      return new Response(JSON.stringify(parsed), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const lesson = parsed;
+
+    return new Response(JSON.stringify({ lesson }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error("OpenAI error:", err);
+    return new Response(
+      JSON.stringify({ error: "Failed to generate lesson" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
     );
   }
 });
