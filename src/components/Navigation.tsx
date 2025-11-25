@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/Circular DeenSTEAM Logo .png";
 import { Home, Sparkles, BookOpen, Atom, Globe, LogOut, User, LayoutDashboard, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,8 +48,8 @@ const Navigation = () => {
   const allNavLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, requireAuth: true },
     { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles, requireAuth: true },
-    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom, requireAuth: false },
     { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen, requireAuth: false },
+    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom, requireAuth: false },
     { to: "/saved-lessons", label: "Saved Lessons", icon: BookOpen, requireAuth: true },
     { to: "/community", label: "Community", icon: Globe, requireAuth: true },
   ];
@@ -113,7 +113,7 @@ const Navigation = () => {
             {/* Theme Toggle */}
             <ThemeToggle />
             
-            {/* Auth Buttons */}
+            {/* Auth Buttons
             {user ? (
               <Button
                 variant="ghost"
@@ -137,7 +137,7 @@ const Navigation = () => {
                   <span>Sign In</span>
                 </Link>
               </Button>
-            )}
+            )} */}
           </div>
 
           {/* Mobile Menu - Only show on smallest screens when logged in */}

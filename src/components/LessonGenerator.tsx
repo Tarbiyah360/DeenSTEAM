@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import Button from "@mui/material/Button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicroscope } from "@fortawesome/free-solid-svg-icons";
+
 import {
   Select,
   SelectContent,
@@ -110,7 +112,11 @@ const LessonGenerator = () => {
             className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/20 mb-4"
             aria-hidden="true"
           >
-            <BookOpen className="h-8 w-8 text-accent-foreground" />
+            <FontAwesomeIcon
+              icon={faMicroscope}
+              className="h-8 w-8"
+              style={{ color: "#003600" }}
+            />
           </div>
           <h2
             id="lesson-heading"
@@ -129,8 +135,8 @@ const LessonGenerator = () => {
           <Card
             className="p-8 rounded-3xl shadow-md"
             style={{
-              backgroundColor: "#cfe8cfff",
-            borderColor: "#cfe8cfff",
+              backgroundColor: "#d3ded3",
+              borderColor: "#d3ded3",
             }}
           >
             <h3
@@ -186,6 +192,13 @@ const LessonGenerator = () => {
             borderColor: "#E0E5D8",
           }}
         >
+          <h3
+            className="text-2xl font-bold text-center mt-4 mb-0"
+            style={{ color: "#1B5E20" }}
+          >
+            Let&apos;s Get Started!
+          </h3>
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -284,8 +297,6 @@ const LessonGenerator = () => {
             </p>
           </form>
         </Card>
-
-        
 
         {/* What you will get section - could help with clarity */}
 
