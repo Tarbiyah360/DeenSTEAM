@@ -1,0 +1,106 @@
+[
+    {
+        "Age": "3 to 4",
+        "Year": "Nursery",
+        "Key Stage": "Early Years",
+        "Category": "Early Years Foundation Stage",
+        "Assessment": "",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "4 to 5",
+        "Year": "Reception",
+        "Key Stage": "Early Years",
+        "Category": "Early Years Foundation Stage",
+        "Assessment": "Teacher Assessment",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "5 to 6",
+        "Year": "Year 1",
+        "Key Stage": "KS1",
+        "Category": "Primary Education",
+        "Assessment": "Phonics Screening Check",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-1-programme-of-study"
+    },
+    {
+        "Age": "6 to 7",
+        "Year": "Year 2",
+        "Key Stage": "KS1",
+        "Category": "Primary Education",
+        "Assessment": "SATS",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-2-programme-of-study"
+    },
+    {
+        "Age": "7 to 8",
+        "Year": "Year 3",
+        "Key Stage": "KS2",
+        "Category": "Primary Education",
+        "Assessment": "",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-3-programme-of-study"
+    },
+    {
+        "Age": "8 to 9",
+        "Year": "Year 4",
+        "Key Stage": "KS2",
+        "Category": "Primary Education",
+        "Assessment": "",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-4-programme-of-study"
+    },
+    {
+        "Age": "9 to 10",
+        "Year": "Year 5",
+        "Key Stage": "KS2",
+        "Category": "Primary Education",
+        "Assessment": "",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-5-programme-of-study"
+    },
+    {
+        "Age": "10 to 11",
+        "Year": "Year 6",
+        "Key Stage": "KS2",
+        "Category": "Primary Education",
+        "Assessment": "SATS",
+        "National Curriculum Science": "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-6-programme-of-study"
+    },
+    {
+        "Age": "11 to 12",
+        "Year": "Year 7",
+        "Key Stage": "KS3",
+        "Category": "Secondary Education",
+        "Assessment": "",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "12 to 13",
+        "Year": "Year 8",
+        "Key Stage": "KS3",
+        "Category": "Secondary Education",
+        "Assessment": "",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "13 to 14",
+        "Year": "Year 9",
+        "Key Stage": "KS3",
+        "Category": "Secondary Education",
+        "Assessment": "",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "14 to 15",
+        "Year": "Year 10",
+        "Key Stage": "KS4",
+        "Category": "Secondary Education",
+        "Assessment": "",
+        "National Curriculum Science": ""
+    },
+    {
+        "Age": "15 to 16",
+        "Year": "Year 11",
+        "Key Stage": "KS4",
+        "Category": "Secondary Education",
+        "Assessment": "GCSE",
+        "National Curriculum Science": ""
+    }
+]
