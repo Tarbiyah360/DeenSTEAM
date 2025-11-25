@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,14 @@ interface LessonData {
   materials: string[];
   activities: Array<{
     title: string;
-    description: string;
-    imageUrl?: string;
+    duration?: string;
+    description?: string;
+    steps?: Array<{
+      stepNumber: number;
+      instruction: string;
+      imageUrl?: string;
+    }>;
+    finalImageUrl?: string;
   }>;
   tryAtHome: {
     title: string;
@@ -33,7 +39,7 @@ interface LessonData {
 const LessonPlanDisplay = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { lesson: initialLesson, age } = location.state as { lesson: LessonData; age: number } || {};
+  const { lesson: initialLesson, age, topic } = location.state as { lesson: LessonData; age: number; topic: string } || {};
   
   const [lesson, setLesson] = useState<LessonData | null>(initialLesson);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -44,12 +50,17 @@ const LessonPlanDisplay = () => {
   }
 
   const handleDownloadPDF = () => {
+    const originalTitle = document.title;
+    document.title = `DeenSTEAM - ${lesson.title}`;
     window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1000);
   };
 
   const handleGenerateNew = async () => {
-    if (!age) {
-      toast.error("Cannot generate new plan without age information");
+    if (!age || !topic) {
+      toast.error("Cannot generate new plan without age and topic information");
       return;
     }
 
@@ -62,7 +73,7 @@ const LessonPlanDisplay = () => {
       const year = yearMap[age];
 
       const { data, error } = await supabase.functions.invoke('generate-lesson', {
-        body: { age, year }
+        body: { age, year, topic }
       });
 
       if (error) throw error;
@@ -90,7 +101,7 @@ const LessonPlanDisplay = () => {
         <div className="mb-6 flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/')}
             className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -165,7 +176,17 @@ const LessonPlanDisplay = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-8">
                 {lesson.materials.map((material, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-primary" />
+                    <span className="text-lg">
+                      {material.toLowerCase().includes('paper') ? '📄' :
+                       material.toLowerCase().includes('pen') || material.toLowerCase().includes('pencil') ? '✏️' :
+                       material.toLowerCase().includes('scissors') ? '✂️' :
+                       material.toLowerCase().includes('glue') || material.toLowerCase().includes('tape') ? '📎' :
+                       material.toLowerCase().includes('paint') || material.toLowerCase().includes('color') || material.toLowerCase().includes('crayon') ? '🎨' :
+                       material.toLowerCase().includes('book') ? '📚' :
+                       material.toLowerCase().includes('water') ? '💧' :
+                       material.toLowerCase().includes('bowl') || material.toLowerCase().includes('container') ? '🥣' :
+                       '✓'}
+                    </span>
                     <span className="text-foreground">{material}</span>
                   </div>
                 ))}
@@ -180,23 +201,62 @@ const LessonPlanDisplay = () => {
               </div>
               <div className="space-y-6">
                 {lesson.activities.map((activity, index) => (
-                  <div key={index} className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1 bg-muted/30 p-5 rounded-lg border border-border/50">
-                      <h4 className="font-semibold text-lg text-foreground mb-2">
+                  <div key={index} className="bg-muted/30 p-5 rounded-lg border border-border/50">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-semibold text-lg text-foreground">
                         {index + 1}. {activity.title}
                       </h4>
+                      {activity.duration && (
+                        <span className="text-sm text-muted-foreground flex items-center gap-1">
+                          ⏱️ {activity.duration}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {activity.steps && activity.steps.length > 0 ? (
+                      <div className="space-y-4">
+                        {activity.steps.map((step, stepIndex) => (
+                          <div key={stepIndex} className="flex gap-4 items-start">
+                            <div className="flex-shrink-0 w-32 h-32 bg-background rounded-lg overflow-hidden border border-border">
+                              {step.imageUrl ? (
+                                <img 
+                                  src={step.imageUrl} 
+                                  alt={`Step ${step.stepNumber}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                  Step {step.stepNumber}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium mb-1 text-foreground">Step {step.stepNumber}</p>
+                              <p className="text-muted-foreground leading-relaxed">{step.instruction}</p>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {activity.finalImageUrl && (
+                          <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                            <h5 className="font-semibold mb-3 text-foreground flex items-center gap-2">
+                              <Check className="h-4 w-4 text-primary" />
+                              Final Result:
+                            </h5>
+                            <div className="w-48 h-48 mx-auto bg-background rounded-lg overflow-hidden border-2 border-primary/30">
+                              <img 
+                                src={activity.finalImageUrl} 
+                                alt="Finished craft"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
                       <p className="text-muted-foreground leading-relaxed">
                         {activity.description}
                       </p>
-                    </div>
-                    {activity.imageUrl && (
-                      <Card className="w-full md:w-64 overflow-hidden shadow-lg">
-                        <img 
-                          src={activity.imageUrl} 
-                          alt={activity.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      </Card>
                     )}
                   </div>
                 ))}
@@ -219,27 +279,22 @@ const LessonPlanDisplay = () => {
 
             {/* Muslim Heritage Connection */}
             {lesson.scientist && (
-              <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">⭐</span>
-                  <h3 className="text-xl font-semibold text-primary">Muslim Heritage Connection</h3>
+              <Link to={lesson.scientist.link}>
+                <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20 transition-all hover:bg-primary/10 hover:border-primary/30 cursor-pointer">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">⭐</span>
+                    <h3 className="text-xl font-semibold text-primary">Muslim Heritage Connection</h3>
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-foreground font-semibold text-lg">
+                      {lesson.scientist.name}
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {lesson.scientist.biography}
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  <p className="text-foreground font-semibold text-lg">
-                    {lesson.scientist.name}
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {lesson.scientist.biography}
-                  </p>
-                  <Button
-                    onClick={() => navigate(lesson.scientist.link)}
-                    variant="outline"
-                    className="mt-2"
-                  >
-                    Learn more about {lesson.scientist.name}
-                  </Button>
-                </div>
-              </div>
+              </Link>
             )}
 
             {/* Reflecting on Allah's Creation */}
@@ -247,10 +302,10 @@ const LessonPlanDisplay = () => {
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-2xl">🌙</span>
                 <h3 className="text-xl font-semibold text-secondary-foreground">
-                  Reflecting on Allah's Creation
+                  Reflection
                 </h3>
               </div>
-              <p className="text-foreground leading-relaxed italic">
+              <p className="text-foreground leading-relaxed text-center italic text-lg">
                 {lesson.reflection}
               </p>
             </div>
