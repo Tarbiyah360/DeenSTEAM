@@ -1,22 +1,23 @@
-# Welcome to your Lovable project
+DeenSTEAM Lesson Generator and STEAM explorer
+STEAM Learning viewed through Islamic lens.
+(STEAM is an acronym for Science Technology Engineering Art and Mathematics )
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/863a4407-e867-4756-986b-7ff8fc34d929
+This project is deployed on [Vercel](https://vercel.com/)
+**URL**: https://www.deensteam.co.uk/
 
-## How can I edit this code?
+Built using React + Vite + Supabase + Edge Functions + Gemini Flash AI
+
+## Overview:
+DeenSTEAM application generates holistic education resources integrating Islamic values(deen) into STEAM curriculum using only Safe and Ethical AI solutions, all on one platform, integrated throughout the lesson plans nurturing faith (Deen) and worldly excellence (Dunya) together.
+
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/863a4407-e867-4756-986b-7ff8fc34d929) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE,
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -24,23 +25,14 @@ Follow these steps:
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone <GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+# Step 2: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 3: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
 
 **Use GitHub Codespaces**
 
@@ -58,16 +50,18 @@ This project is built with:
 - TypeScript
 - React
 - shadcn-ui
-- Tailwind CSS
+- Tailwind CSS 
+- Supabase (Database + Storage + Edge Functions)
+- Gemini AI API (free tier)
 
-## How can I deploy this project?
+## How it works:
+Users (Parents and Educators) select age+topic , click generate and the app returns a a complete lesson plan aligned with UK National curriculum for ages 5-11 years.
+The lesson plan contains 'objectives, Detailed instructions of 2/3 fun STEM activities , list of materials needed, Muslim Scientists connection and Islamic refelction. The lessons can be downloaded as pdf for sharing or printing.
 
-Simply open [Lovable](https://lovable.dev/projects/863a4407-e867-4756-986b-7ff8fc34d929) and click on Share -> Publish.
+## Edge funtion logic:
+checks if lesson exists --> returns cached 
+If not ----> calls backend --> starts RAG process: creates embeddings from provided datasource --> retrieves related documents --> builds a contexual prompt --> calls gemini to genrate a new lesson with age+topic ---> stores lesson --> Returns
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Notes:
+This app uses AI responsibly,
+All lessons are generated with ethical guidelines, avoiding harmful content , remain aligned with Islamic Values and child - safety standards
