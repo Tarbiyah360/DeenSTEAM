@@ -125,8 +125,7 @@ const LessonGenerator = () => {
             DeenSTEAM Lesson Generator
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get age-appropriate STEM lessons inspired by Qur'anic wisdom and
-            Muslim heritage
+           Create personalized STEAM focused lessons alligned with the UK National Curriculum, enriched with Islamic reflections. Perfect for curious young minds aged 5-11!
           </p>
         </div>
 
@@ -165,8 +164,8 @@ const LessonGenerator = () => {
                   <div
                     className="inline-flex items-center justify-center w-16 h-16 rounded-full shadow-md font-extrabold text-2xl"
                     style={{
-                      backgroundColor: "#f3e8b8ff",
-                      color: "#eecb32ff",
+                      backgroundColor: "#88a788ff",
+                      color: "#304130",
                     }}
                   >
                     {s.step}
