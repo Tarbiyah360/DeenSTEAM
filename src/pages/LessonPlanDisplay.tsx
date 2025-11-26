@@ -296,6 +296,7 @@ const LessonPlanDisplay = () => {
                 </div>
               </Link>
             )}
+            
 
             {/* Reflecting on Allah's Creation */}
             <div className="bg-secondary/10 p-6 rounded-lg border-2 border-secondary/30">

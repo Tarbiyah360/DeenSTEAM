@@ -1,8 +1,49 @@
 import { Card } from "@/components/ui/card";
-import { Atom, Microscope, Telescope, Beaker } from "lucide-react";
+import { Atom, Microscope, Telescope, Beaker, Eye, Cog, Wrench, PaintbrushIcon, Calculator} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+
 const steamTopics = [
+  {
+    icon: Eye,
+    title: "Science",
+    description: "Discover the father of optics and scientific method",
+    inventor: "Ibn al-Haytham",
+    contribution: "Pioneered experimental physics and optics",
+    link: "/scientist/ibn-al-haytham",
+  },
+  {
+    icon: Cog,
+    title: "Technology",
+    description: "Revolutionary mechanical inventions and automation",
+    inventor: "Al-Jazari",
+    contribution: "Created the first programmable humanoid robot",
+    link: "/scientist/al-jazari",
+  },
+  {
+    icon: Wrench,
+    title: "Engineering",
+    description: "Ingenious mechanical devices and mathematical instruments",
+    inventor: "Banu Musa Brothers",
+    contribution: "Automatic control systems and clever mechanisms",
+    link: "/scientist/banu-musa",
+  },
+  {
+    icon: PaintbrushIcon,
+    title: "Art & Architecture",
+    description: "Master architect of magnificent Ottoman structures",
+    inventor: "Mimar Sinan",
+    contribution: "Designed 300+ architectural masterpieces",
+    link: "/scientist/mimar-sinan",
+  },
+  {
+    icon: Calculator,
+    title: "Mathematics",
+    description: "Brilliant mathematician, astronomer, and poet",
+    inventor: "Omar Khayyam",
+    contribution: "Geometric algebra and calendar reform",
+    link: "/scientist/omar-khayyam",
+  },
   {
     icon: Telescope,
     title: "Astronomy",
@@ -29,7 +70,7 @@ const steamTopics = [
   },
   {
     icon: Atom,
-    title: "Mathematics",
+    title: "Algebra",
     description: "Mathematical innovations that changed the world",
     inventor: "Al-Khwarizmi",
     contribution: "Algebra and algorithms",
