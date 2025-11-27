@@ -188,7 +188,7 @@ const LessonGenerator = () => {
           className="mb-8 shadow-lg border rounded-3xl"
           style={{
             backgroundColor: "#ecf5eaff",
-            borderColor: "#E0E5D8",
+            borderColor: "#d5daceff",
           }}
         >
           <h3
