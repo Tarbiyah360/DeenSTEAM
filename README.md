@@ -1,4 +1,4 @@
-DeenSTEAM Lesson Generator and STEAM explorer
+# DeenSTEAM AI Lesson Generator and STEAM explorer
 STEAM Learning viewed through Islamic lens.
 (STEAM is an acronym for Science Technology Engineering Art and Mathematics )
 
@@ -7,7 +7,7 @@ STEAM Learning viewed through Islamic lens.
 This project is deployed on [Vercel](https://vercel.com/)
 **URL**: https://www.deensteam.co.uk/
 
-Built using React + Vite + Supabase + Edge Functions + Gemini Flash AI
+Built using React + Vite + Supabase + Edge Functions + Gemini Flash AI 
 
 ## Overview:
 DeenSTEAM application generates holistic education resources integrating Islamic values(deen) into STEAM curriculum using only Safe and Ethical AI solutions, all on one platform, integrated throughout the lesson plans nurturing faith (Deen) and worldly excellence (Dunya) together.
@@ -62,6 +62,22 @@ The lesson plan contains 'objectives, Detailed instructions of 2/3 fun STEM acti
 checks if lesson exists --> returns cached 
 If not ----> calls backend --> starts RAG process: creates embeddings from provided datasource --> retrieves related documents --> builds a contexual prompt --> calls gemini to genrate a new lesson with age+topic ---> stores lesson --> Returns
 
+
 ## Notes:
 This app uses AI responsibly,
 All lessons are generated with ethical guidelines, avoiding harmful content , remain aligned with Islamic Values and child - safety standards
+
+
+## Credits :
+Intitial design created with the help of Lovable.dev AI tools
+
+## Data source:
+Content related to STEAM activity structure and learning objectives is based on information publicly available from UK national curriculum.
+
+Historical scientists information in this project is based on publicly available facts. Some inspiration for Scientist's profiles was taken from '1001 inventions' intiative. No text or images were copied, all content is original.
+
+For Qur'an reflection, open source curated resources were used.
+
+For feedback on further development of this project:
+Please fill this form -https://forms.gle/79TaQh6Vj5xTXxE3A
+
