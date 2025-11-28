@@ -232,7 +232,7 @@ const LessonPlanDisplay = () => {
                             </div>
                             <div className="flex-1">
                               <p className="font-medium mb-1 text-foreground">Step {step.stepNumber}</p>
-                              <p className="text-muted-foreground leading-relaxed">{step.instruction}</p>
+                              <p className="text-muted-foreground leading-relaxed font-bold text-600" style={{color: "#1B322A"}}>{step.instruction}</p>
                             </div>
                           </div>
                         ))}
@@ -263,6 +263,8 @@ const LessonPlanDisplay = () => {
               </div>
             </div>
 
+            <div className="space-y-6">
+
             {/* Try This at Home */}
             <div className="bg-accent/5 p-6 rounded-lg border-2 border-accent/20">
               <div className="flex items-center gap-2 mb-3">
@@ -279,7 +281,7 @@ const LessonPlanDisplay = () => {
 
             {/* Muslim Heritage Connection */}
             {lesson.scientist && (
-              <Link to={lesson.scientist.link}>
+              <Link to={lesson.scientist.link} className="block">
                 <div className="bg-primary/5 p-6 rounded-lg border-2 border-primary/20 transition-all hover:bg-primary/10 hover:border-primary/30 cursor-pointer">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl">⭐</span>
@@ -310,7 +312,6 @@ const LessonPlanDisplay = () => {
                 {lesson.reflection}
               </p>
             </div>
-
             {/* Think and Be Grateful */}
             <div className="text-center py-4">
               <div className="flex items-center gap-2 justify-center mb-2">
@@ -321,6 +322,9 @@ const LessonPlanDisplay = () => {
                 SubhanAllah! Reflect on Allah's perfect creation
               </p>
             </div>
+
+            </div>
+
 
             {/* Footer */}
             <div className="border-t pt-6 text-center space-y-2">

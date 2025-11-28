@@ -48,8 +48,8 @@ const Navigation = () => {
   const allNavLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, requireAuth: true },
     { to: "/daily-wisdom", label: "Daily Wisdom", icon: Sparkles, requireAuth: true },
-    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom, requireAuth: false },
     { to: "/lesson-generator", label: "Lesson Generator", icon: BookOpen, requireAuth: false },
+    { to: "/steam-explorer", label: "STEAM Explorer", icon: Atom, requireAuth: false },
     { to: "/saved-lessons", label: "Saved Lessons", icon: BookOpen, requireAuth: true },
     { to: "/community", label: "Community", icon: Globe, requireAuth: true },
   ];
@@ -141,7 +141,6 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu - Only show on smallest screens when logged in */}
-          {user && (
             <div className="flex md:hidden items-center gap-2">
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -201,7 +200,6 @@ const Navigation = () => {
               </SheetContent>
             </Sheet>
             </div>
-          )}
         </div>
       </div>
     </nav>
