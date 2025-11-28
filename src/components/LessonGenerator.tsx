@@ -159,9 +159,8 @@ const LessonGenerator = () => {
   };
   return (
     <section
-      // id="lesson-generator"
-      // className="py-20 px-4"
-      // aria-labelledby="lesson-heading"
+      id="lesson-generator"
+      aria-labelledby="lesson-heading"
       className="relative py-20 px-4 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${picture})`}}
     >

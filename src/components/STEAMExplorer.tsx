@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Atom, Microscope, Telescope, Beaker, Eye, Cog, Wrench, PaintbrushIcon, Calculator} from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import picture from "@/assets/hero-background.png"
+
 
 
 
@@ -87,9 +89,15 @@ const STEAMExplorer = () => {
 
   return (
 
-    
-    <section className="py-20 px-4">
-      <div className="container mx-auto max-w-6xl">
+    <section
+      id="lesson-generator"
+      aria-labelledby="lesson-heading"
+      className="relative py-20 px-4 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${picture})`}}
+    >
+      <div className="absolute inset-0 bg-white/70"></div>
+
+      <div className=" relative z-10 container mx-auto max-w-6xl">
         <div className="text-center mb-12 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground">
             STEAM Learning Explorer
