@@ -36,6 +36,7 @@ interface LessonData {
   };
 }
 
+
 const LessonPlanDisplay = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const LessonPlanDisplay = () => {
   
   const [lesson, setLesson] = useState<LessonData | null>(initialLesson);
   const [isGenerating, setIsGenerating] = useState(false);
-
+  
   if (!lesson) {
     navigate('/lesson-generator');
     return null;
@@ -92,7 +93,25 @@ const LessonPlanDisplay = () => {
       setIsGenerating(false);
     }
   };
+  
+  const VALID_SCIENTIST_ROUTES = new Set([
+    "/scientist/al-battani",
+    "/scientist/jabir-ibn-hayyan",
+    "/scientist/ibn-al-haytham",
+    "/scientist/banu-musa",
+    "/scientist/mimar-sinan",
+    "/scientist/omar-khayyam",
+    "/scientist/ibn-sina",
+    "/scientist/al-khwarizmi",
+    "/scientist/al-zahrawi",
+    "/scientist/fatima-al-fihri",
+    "/scientist/abbas-ibn-firnas",
+    "/scientist/al-jazari",
+  ]);
 
+  const scientist = lesson.scientist
+  const linkExists = scientist && VALID_SCIENTIST_ROUTES.has(scientist.link);
+  
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
