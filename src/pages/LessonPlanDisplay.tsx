@@ -232,7 +232,7 @@ const LessonPlanDisplay = () => {
                             </div>
                             <div className="flex-1">
                               <p className="font-medium mb-1 text-foreground">Step {step.stepNumber}</p>
-                              <p className="text-muted-foreground leading-relaxed">{step.instruction}</p>
+                              <p className="text-muted-foreground leading-relaxed font-bold text-600" style={{color: "#1B322A"}}>{step.instruction}</p>
                             </div>
                           </div>
                         ))}
