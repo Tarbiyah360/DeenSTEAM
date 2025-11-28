@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Sparkles, Check } from "lucide-react";
@@ -48,6 +48,15 @@ const LessonPlanDisplay = () => {
 
   const [lesson, setLesson] = useState<LessonData | null>(initialLesson);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+    if (!lesson) return;
+    const originalTitle = document.title;
+    document.title = `DeenSTEAM - ${lesson.title}`;
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [lesson?.title]);
 
   if (!lesson) {
     navigate("/lesson-generator");
