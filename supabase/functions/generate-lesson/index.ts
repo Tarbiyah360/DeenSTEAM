@@ -1,6 +1,6 @@
 // supabase/functions/generate-lesson/index.ts
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import OpenAI from "https://deno.land/x/openai@v4.24.0/mod.ts";
 
 const corsHeaders = {
@@ -9,7 +9,8 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-// ---------- Rate limiting ----------
+// ---------------- Rate limiting (per IP, very simple, in-memory) ----------------
+
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
 const MAX_REQUESTS_PER_WINDOW = 10;
 
@@ -18,10 +19,10 @@ const rateLimitStore = new Map<string, number[]>();
 function checkRateLimit(ip: string) {
   const now = Date.now();
   const timestamps = rateLimitStore.get(ip) || [];
-  const valid = timestamps.filter((ts) => now - ts < RATE_LIMIT_WINDOW);
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW);
 
-  if (valid.length >= MAX_REQUESTS_PER_WINDOW) {
-    const oldest = Math.min(...valid);
+  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
+    const oldest = Math.min(...recent);
     const resetTime = oldest + RATE_LIMIT_WINDOW;
     return {
       allowed: false,
@@ -30,17 +31,18 @@ function checkRateLimit(ip: string) {
     };
   }
 
-  valid.push(now);
-  rateLimitStore.set(ip, valid);
+  recent.push(now);
+  rateLimitStore.set(ip, recent);
 
   return {
     allowed: true,
-    remainingRequests: MAX_REQUESTS_PER_WINDOW - valid.length,
+    remainingRequests: MAX_REQUESTS_PER_WINDOW - recent.length,
     resetTime: now + RATE_LIMIT_WINDOW,
   };
 }
 
-// ---------- Curriculum topics ----------
+// ---------------- Curriculum topics & URLs ----------------
+
 const ALLOWED_TOPICS = [
   "Forces and Magnets",
   "Light and Shadows",
@@ -65,7 +67,90 @@ const curriculumUrls: Record<number, string> = {
   6: "https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-6-programme-of-study",
 };
 
-// ---------- Edge function ----------
+// ---------------- Age-based depth guidance ----------------
+
+function getDepthGuidance(age: number, year: number): string {
+  if (age <= 6) {
+    return `
+For 5–6 year olds (Year ${year}):
+- Use very simple, concrete language (short sentences, everyday words).
+- Focus on what they can see, touch, hear, smell (sensory and playful).
+- Explain ONE key idea only, with repetition and lots of examples.
+- Every activity should feel like a game or story, not like an exam.
+- Avoid abstract words like "hypothesis" or "variables".
+`;
+  } else if (age <= 8) {
+    return `
+For 7–8 year olds (Year ${year}):
+- Use simple science words, but always explain them with real-life examples.
+- Start introducing cause and effect ("if we do X, then Y happens").
+- Activities should mix fun and thinking (predict → try → talk about result).
+- Include questions children can actually answer out loud with their parents.
+`;
+  } else {
+    return `
+For 9–11 year olds (Year ${year}):
+- Use more precise science language, but always tie it to daily life.
+- Build on what they might have learned in earlier years.
+- Let them compare, sort, measure, and record in simple tables.
+- Add at least one moment where they reflect: "What surprised you? What did you expect?"
+- Keep tone warm, friendly, and parent-child focused, not like a strict exam textbook.
+`;
+  }
+}
+
+// ---------------- Clients: Supabase + Gemini via OpenAI-compatible API ----------------
+
+function getClients() {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("SUPABASE_URL or SUPABASE_ANON_KEY is missing");
+  }
+  if (!geminiApiKey) {
+    throw new Error("GEMINI_API_KEY is missing");
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  // Gemini through OpenAI-compatible endpoint
+  const ai = new OpenAI({
+    apiKey: geminiApiKey,
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  });
+
+  return { supabase, ai };
+}
+
+// ---------------- Image generation with Gemini (Imagen) ----------------
+
+async function generateImage(ai: OpenAI, prompt: string): Promise<string> {
+  try {
+    const result = await ai.images.generate({
+      model: "imagen-3.0-generate-002",
+      prompt,
+      n: 1,
+      response_format: "b64_json",
+    });
+
+    const b64 = result.data?.[0]?.b64_json;
+    if (!b64) {
+      console.warn("No b64 image data returned from Gemini");
+      return "";
+    }
+
+    // Return data URL so the frontend can display image directly with <img src="...">
+    return `data:image/png;base64,${b64}`;
+  } catch (error) {
+    console.error("Image generation error:", error);
+    return ""; // Fallback: no image
+  }
+}
+
+// ---------------- Main handler ----------------
+
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -78,27 +163,19 @@ serve(async (req: Request): Promise<Response> => {
       "unknown";
 
     // Rate limit
-    const limit = checkRateLimit(clientIP);
-    if (!limit.allowed) {
-      const minutes = Math.ceil(
-        (limit.resetTime - Date.now()) / (60 * 1000),
-      );
+    const rate = checkRateLimit(clientIP);
+    if (!rate.allowed) {
+      const mins = Math.ceil((rate.resetTime - Date.now()) / (60 * 1000));
       return new Response(
         JSON.stringify({
           error: "Rate limit exceeded",
-          message: `You can generate up to ${MAX_REQUESTS_PER_WINDOW} lessons per hour. Please try again in ${minutes} minute${minutes !== 1 ? "s" : ""
-            }.`,
-          resetTime: new Date(limit.resetTime).toISOString(),
-          remainingRequests: 0,
+          message: `You can generate up to ${MAX_REQUESTS_PER_WINDOW} lessons per hour. Try again in about ${mins} minute${mins !== 1 ? "s" : ""}.`,
         }),
         {
           status: 429,
           headers: {
             ...corsHeaders,
             "Content-Type": "application/json",
-            "X-RateLimit-Limit": MAX_REQUESTS_PER_WINDOW.toString(),
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": limit.resetTime.toString(),
           },
         },
       );
@@ -107,15 +184,13 @@ serve(async (req: Request): Promise<Response> => {
     const { age, year, topic } = await req.json();
 
     console.log(
-      `[${new Date().toISOString()}] generate-lesson from ${clientIP} – topic="${topic}", age=${age}, year=${year}`,
+      `[${new Date().toISOString()}] Lesson request from ${clientIP} - Topic: "${topic}", Age: ${age}, Year: ${year}, Remaining: ${rate.remainingRequests}`,
     );
 
-    // ---------- Validate input ----------
+    // Validate age & year
     if (!age || !year || age < 5 || age > 11 || year < 1 || year > 6) {
       return new Response(
-        JSON.stringify({
-          error: "Valid age (5–11) and year (1–6) are required",
-        }),
+        JSON.stringify({ error: "Valid age (5–11) and year (1–6) are required" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -123,6 +198,7 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
+    // Validate topic
     if (!topic || typeof topic !== "string") {
       return new Response(
         JSON.stringify({
@@ -148,23 +224,17 @@ serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    // ---------- Env + clients ----------
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
-    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
+    const { supabase, ai } = getClients();
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error("Supabase configuration is missing");
-    }
-    if (!openaiApiKey) {
-      throw new Error("OPENAI_API_KEY is not configured");
-    }
+    const curriculumRef = curriculumUrls[year] || "UK National Curriculum";
+    const depthGuidance = getDepthGuidance(age, year);
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
-    const openai = new OpenAI({ apiKey: openaiApiKey });
+    // ---------------- Cache check ----------------
+    console.log(
+      `[${clientIP}] Checking cache age=${age}, year=${year}, topic="${topic}"`,
+    );
 
-    // ---------- Cache lookup ----------
-    const { data: cachedLesson, error: cacheError } = await supabase
+    const { data: cached, error: cacheError } = await supabase
       .from("saved_lessons")
       .select("lesson_data")
       .eq("age", age)
@@ -176,173 +246,243 @@ serve(async (req: Request): Promise<Response> => {
       console.error("Cache lookup error:", cacheError);
     }
 
-    if (cachedLesson?.lesson_data) {
-      console.log(`[${clientIP}] Cache HIT`);
-      return new Response(
-        JSON.stringify({ lesson: cachedLesson.lesson_data }),
-        {
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-            "X-Cache": "HIT",
-            "X-RateLimit-Limit": MAX_REQUESTS_PER_WINDOW.toString(),
-            "X-RateLimit-Remaining": limit.remainingRequests.toString(),
-            "X-RateLimit-Reset": limit.resetTime.toString(),
+    if (cached?.lesson_data) {
+      console.log(`[${clientIP}] Cache HIT for topic "${topic}"`);
+      return new Response(JSON.stringify({ lesson: cached.lesson_data }), {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "X-Cache": "HIT",
+        },
+      });
+    }
+
+    console.log(`[${clientIP}] Cache MISS for topic "${topic}"`);
+
+    // ---------------- Ask Gemini for structured JSON (no images yet) ----------------
+
+    const completion = await ai.chat.completions.create({
+      model: "gemini-2.0-flash",
+      temperature: 0.4,
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "lesson_plan",
+          strict: true,
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              title: { type: "string" },
+              ageGroup: { type: "string" },
+              objectives: {
+                type: "array",
+                items: { type: "string" },
+                minItems: 4,
+              },
+              materials: {
+                type: "array",
+                items: { type: "string" },
+                minItems: 6,
+              },
+              activities: {
+                type: "array",
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  properties: {
+                    title: { type: "string" },
+                    duration: { type: "string" },
+                    description: { type: "string" },
+                    steps: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        additionalProperties: false,
+                        properties: {
+                          stepNumber: { type: "integer" },
+                          instruction: { type: "string" },
+                          imagePrompt: { type: "string" },
+                          imageUrl: { type: "string" },
+                        },
+                        required: [
+                          "stepNumber",
+                          "instruction",
+                          "imagePrompt",
+                          "imageUrl",
+                        ],
+                      },
+                      minItems: 3,
+                    },
+                    finalImagePrompt: { type: "string" },
+                    finalImageUrl: { type: "string" },
+                  },
+                  required: [
+                    "title",
+                    "duration",
+                    "description",
+                    "steps",
+                    "finalImagePrompt",
+                    "finalImageUrl",
+                  ],
+                },
+                minItems: 2,
+              },
+              tryAtHome: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                },
+                required: ["title", "description"],
+              },
+              reflection: { type: "string" },
+              scientist: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  name: { type: "string" },
+                  link: {
+                    type: "string",
+                    enum: [
+                      "/scientist/al-khwarizmi",
+                      "/scientist/al-battani",
+                      "/scientist/ibn-sina",
+                      "/scientist/jabir-ibn-hayyan",
+                      "/scientist/al-zahrawi",
+                      "/scientist/fatima-al-fihri",
+                      "/scientist/abbas-ibn-firnas",
+                      "/scientist/al-jazari",
+                    ],
+                  },
+                  biography: { type: "string" },
+                },
+                required: ["name", "link", "biography"],
+              },
+            },
+            required: [
+              "title",
+              "ageGroup",
+              "objectives",
+              "materials",
+              "activities",
+              "tryAtHome",
+              "reflection",
+              "scientist",
+            ],
           },
         },
-      );
-    }
-
-    console.log(`[${clientIP}] Cache MISS – generating new lesson`);
-
-    const curriculumRef = curriculumUrls[year] || "UK National Curriculum";
-
-    // ---------- 1. Ask OpenAI for the lesson STRUCTURE (no images yet) ----------
-    const systemPrompt = `
-You are a DeenSTEAM lesson designer.
-
-Create ONE detailed Year ${year} Science lesson plan about "${topic}"
-for a ${age}-year-old child, following the UK National Curriculum.
-
-CURRICULUM REFERENCE: ${curriculumRef}
-
-RULES (VERY IMPORTANT):
-- Return ONLY valid JSON with this structure:
-
-{
-  "title": string,
-  "ageGroup": string,
-  "objectives": string[],
-  "materials": string[],
-  "activities": [
-    {
-      "title": string,
-      "duration": string,
-      "description": string,
-      "steps": [
-        {
-          "stepNumber": number,
-          "instruction": string,
-          "imagePrompt": string
-        }
-      ],
-      "finalImagePrompt": string
-    }
-  ],
-  "tryAtHome": {
-    "title": string,
-    "description": string
-  },
-  "reflection": string,
-  "scientist": {
-    "name": string,
-    "link": string,
-    "biography": string
-  }
-}
-
-- Exactly 2 activities. ONE of them MUST be a clear CRAFT (making or building).
-- Each activity has 3–5 steps.
-- imagePrompt and finalImagePrompt must describe simple black-and-white clipart line drawings, hands only, child-friendly, no faces.
-- "link" MUST be one of:
-  "/scientist/al-khwarizmi",
-  "/scientist/al-battani",
-  "/scientist/ibn-sina",
-  "/scientist/jabir-ibn-hayyan",
-  "/scientist/al-zahrawi",
-  "/scientist/fatima-al-fihri",
-  "/scientist/abbas-ibn-firnas",
-  "/scientist/al-jazari"
-- The scientist's biography and work must connect logically to the topic "${topic}".
-- Reflection should be 1–2 short sentences linking the science to Allah's creation.
-- Do NOT invent exact Qur'an ayat or hadith text. Keep references general (e.g. "a verse in the Qur'an reminds us that...").
-- Use simple language suitable for a Muslim child of ${age} years old.
-`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0.4,
-      response_format: { type: "json_object" },
+      },
       messages: [
-        { role: "system", content: systemPrompt },
+        {
+          role: "system",
+          content: `
+You are an expert DeenSTEAM lesson designer.
+
+CONTEXT:
+- Design a single detailed Year ${year} Science lesson on "${topic}" for a ${age}-year-old Muslim child.
+- The lesson is used by a MOTHER teaching her child at home.
+- It must feel warm, practical, and spiritually uplifting.
+
+CURRICULUM:
+- Follow the Year ${year} UK Science curriculum (${curriculumRef}).
+- Do NOT copy text from the curriculum page or sound like a Google snippet.
+- Always paraphrase in child-friendly language.
+- Explanations must be wrapped in mini-scenarios, questions, and real-life situations, not just dry facts.
+
+AGE-BASED DEPTH:
+${depthGuidance}
+
+UNIQUENESS RULES (VERY IMPORTANT):
+- Never start with a dry definition. Hook the child with a scenario:
+  e.g. "Imagine you drop your toy..." or "Have you ever seen...?"
+- Use examples from a Muslim child's world: home, masjid, wudu, salah times, Ramadan, Eid, nature walks.
+- Do NOT repeat the same phrasing or structure across activities.
+- Make the craft activity something a child would proudly show to a parent or hang on the wall.
+- Avoid generic closings like "In conclusion", "Overall", "In this lesson we learnt".
+
+DEENSTEAM FLAVOUR:
+- Gently connect science to Allah's creation: order, beauty, balance, mercy.
+- Do NOT invent specific Qur'an ayat or hadith references. Keep it general and respectful.
+- Encourage the parent to say phrases like "SubhanAllah" and "Alhamdulillah" with the child.
+
+IMAGE FIELDS:
+- For every step, provide a short "imagePrompt" for a simple child-friendly illustration (no text in the image).
+- For every activity, provide a "finalImagePrompt" describing the finished craft/result.
+- If you don't know an imageUrl, set it to an empty string "" (backend will replace it).
+
+IMPORTANT:
+- The JSON MUST follow the provided schema exactly.
+- Be generous with objectives, descriptions, and steps, but keep each sentence simple and clear.
+        `.trim(),
+        },
         {
           role: "user",
-          content:
-            "Generate the complete lesson plan JSON now. Do not include any text outside the JSON.",
+          content: "Create the DeenSTEAM lesson plan now as JSON only.",
         },
       ],
     });
 
-    const rawContent = completion.choices?.[0]?.message?.content || "{}";
+    const raw = completion.choices?.[0]?.message?.content || "{}";
 
-    let baseLesson: any;
+    let lesson: any;
     try {
-      baseLesson = JSON.parse(rawContent);
+      lesson = JSON.parse(raw);
     } catch (err) {
-      console.error("Failed to parse JSON from OpenAI:", rawContent);
+      console.error("Failed to parse Gemini JSON:", raw);
       throw new Error("AI did not return valid JSON");
     }
 
-    console.log("Lesson structure generated. Now generating images...");
+    console.log(
+      `[${clientIP}] Lesson structure generated, now generating images where needed...`,
+    );
 
-    // ---------- 2. Generate images for each step & final craft ----------
-    const generateImageUrl = async (prompt: string): Promise<string> => {
-      if (!prompt) return "";
-      try {
-        const img = await openai.images.generate({
-          model: "gpt-image-1",
-          prompt,
-          size: "512x512",
-        });
-        const url = img.data?.[0]?.url || "";
-        return url;
-      } catch (err) {
-        console.error("Image generation error:", err);
-        return "";
-      }
-    };
-
-    for (const activity of baseLesson.activities ?? []) {
-      // Step images
-      if (Array.isArray(activity.steps)) {
-        for (const step of activity.steps) {
-          step.imageUrl = await generateImageUrl(step.imagePrompt);
+    // ---------------- Generate images from prompts and fill imageUrl fields ----------------
+    if (lesson.activities && Array.isArray(lesson.activities)) {
+      for (const activity of lesson.activities) {
+        // Step images
+        if (activity.steps && Array.isArray(activity.steps)) {
+          for (const step of activity.steps) {
+            if (step.imagePrompt && (!step.imageUrl || step.imageUrl === "")) {
+              step.imageUrl = await generateImage(ai, step.imagePrompt);
+            }
+          }
         }
-      }
 
-      // Final result image
-      if (activity.finalImagePrompt) {
-        activity.finalImageUrl = await generateImageUrl(
-          activity.finalImagePrompt,
-        );
+        // Final result image
+        if (activity.finalImagePrompt && (!activity.finalImageUrl || activity.finalImageUrl === "")) {
+          activity.finalImageUrl = await generateImage(ai, activity.finalImagePrompt);
+        }
       }
     }
 
-    const lessonWithImages = baseLesson;
+    console.log(
+      `[${clientIP}] Lesson generated with images (where possible). Saving to cache...`,
+    );
 
-    // ---------- 3. Save to cache ----------
+    // ---------------- Save to cache table ----------------
     const { error: saveError } = await supabase.from("saved_lessons").insert({
       age,
       year,
       topic,
-      lesson_data: lessonWithImages,
+      lesson_data: lesson,
     });
 
     if (saveError) {
       console.error("Failed to save lesson to cache:", saveError);
+    } else {
+      console.log(
+        `[${clientIP}] Lesson cached for age=${age}, year=${year}, topic="${topic}"`,
+      );
     }
 
-    console.log(`[${clientIP}] Lesson generated and cached`);
-
-    // ---------- 4. Return to frontend ----------
-    return new Response(JSON.stringify({ lesson: lessonWithImages }), {
+    // ---------------- Return to frontend ----------------
+    return new Response(JSON.stringify({ lesson }), {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
         "X-Cache": "MISS",
-        "X-RateLimit-Limit": MAX_REQUESTS_PER_WINDOW.toString(),
-        "X-RateLimit-Remaining": limit.remainingRequests.toString(),
-        "X-RateLimit-Reset": limit.resetTime.toString(),
       },
     });
   } catch (error) {
