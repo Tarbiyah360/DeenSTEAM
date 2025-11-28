@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Atom, Microscope, Telescope, Beaker, Eye, Cog, Wrench, PaintbrushIcon, Calculator} from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 
 const steamTopics = [
@@ -78,10 +79,15 @@ const steamTopics = [
   },
 ];
 
+
 const STEAMExplorer = () => {
   const navigate = useNavigate();
+  const location = useLocation() as { state: { missingScientist?: string } };
+  const missingScientist = location.state?.missingScientist;
 
   return (
+
+    
     <section className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12 space-y-4">
@@ -92,6 +98,18 @@ const STEAMExplorer = () => {
             Discover Muslim scientists and inventors who shaped modern science, inspired by the 1001 Inventions heritage
           </p>
         </div>
+
+        {missingScientist && (
+          <div className="mb-8 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-sm text-yellow-900">
+            <p className="font-semibold">
+              "Oh no! That&apos;s all the information we had for {" "}
+              <span className="underline">{missingScientist}</span>
+            </p>
+            <p className="mt-1">
+              How about you try and explore one of the amazing Muslim scientists and inventors from the subjects below instead?
+            </p>
+          </div>
+        )}
 
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
           {steamTopics.map((topic, index) => {
