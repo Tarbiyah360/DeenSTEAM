@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Atom, Microscope, Telescope, Beaker, Eye, Cog, Wrench, PaintbrushIcon, Calculator} from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import picture from "@/assets/hero-background.png"
+import picture from "@/assets/hero-bg.jpeg"
 
 
 
