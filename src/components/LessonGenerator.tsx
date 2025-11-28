@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import picture from "@/assets/hero-background.png"
 import {
   Select,
   SelectContent,
@@ -159,10 +160,12 @@ const LessonGenerator = () => {
   return (
     <section
       id="lesson-generator"
-      className="py-20 px-4"
       aria-labelledby="lesson-heading"
+      className="relative py-20 px-4 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${picture})`}}
     >
-      <div className="container mx-auto max-w-5xl">
+      <div className="absolute inset-0 bg-white/70"></div>
+      <div className=" relative z-10 container mx-auto max-w-5xl">
         <div className="text-center mb-12 space-y-4">
           <div
             className="inline-flex items-center justify-center mb-4"
@@ -199,7 +202,7 @@ const LessonGenerator = () => {
         </div>
 
         {/* How It Works Steps */}
-        <Card className="p-6 mb-8 bg-card/50 border-border/50">
+        <Card className="p-6 mb-8 bg-card/70 border-border/50">
           <h3 className="text-xl font-semibold text-foreground mb-4 text-center">
             How It Works
           </h3>
