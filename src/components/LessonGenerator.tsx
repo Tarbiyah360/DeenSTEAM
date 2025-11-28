@@ -174,6 +174,23 @@ const LessonGenerator = () => {
           >
             DeenSTEAM Lesson Generator
           </h2>
+          <div
+            className="flex flex-wrap justify-center gap-2 mb-6"
+            style={{ color: "#e9c763" }}
+          >
+            {["Science", "Technology", "Engineering", "Art", "Mathematics"].map(
+              (item) => (
+                <span
+                  key={item}
+                  className="px-3 py-1 rounded-full bg-[#e9c763] text-[#0a1103] text-sm font-semibold shadow-sm"
+                >
+                  {item}
+                </span>
+              )
+            )}
+          </div>
+         
+
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Create personalized STEAM focused lessons alligned with the UK
             National Curriculum, enriched with Islamic reflections. Perfect for
