@@ -141,7 +141,7 @@ const STEAMExplorer = () => {
               <Card 
                 key={index}
                 onClick={() => navigate(topic.link)}
-                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group cursor-pointer hover:scale-[1.02]"
+                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card backdrop-blur-sm group cursor-pointer hover:scale-[1.02]"
               >
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">

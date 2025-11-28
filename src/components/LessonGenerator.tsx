@@ -202,7 +202,7 @@ const LessonGenerator = () => {
         </div>
 
         {/* How It Works Steps */}
-        <Card className="p-6 mb-8 bg-card/50 border-border/50">
+        <Card className="p-6 mb-8 bg-card/70 border-border/50">
           <h3 className="text-xl font-semibold text-foreground mb-4 text-center">
             How It Works
           </h3>
