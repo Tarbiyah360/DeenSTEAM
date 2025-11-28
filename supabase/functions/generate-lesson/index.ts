@@ -124,8 +124,8 @@ function getClients() {
   return { supabase, ai };
 }
 
-// ---------------- Image generation with Gemini (Imagen) ----------------
-
+// ---------------- (Unused now) Image generation with Gemini (Imagen) ----------------
+// keeping this in case you want to go back later, but we no longer CALL it anywhere
 async function generateImage(ai: OpenAI, prompt: string): Promise<string> {
   try {
     const result = await ai.images.generate({
@@ -141,12 +141,58 @@ async function generateImage(ai: OpenAI, prompt: string): Promise<string> {
       return "";
     }
 
-    // Return data URL so the frontend can display image directly with <img src="...">
     return `data:image/png;base64,${b64}`;
   } catch (error) {
     console.error("Image generation error:", error);
-    return ""; // Fallback: no image
+    return "";
   }
+}
+
+// ---------------- NEW: Static image attachment ----------------
+
+// turn "Plants" or "Forces and Magnets" into "plants" / "forces-and-magnets"
+function slugifyTopic(topic: string): string {
+  return topic
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/**
+ * Attach static image URLs based on topic + activity + step.
+ *
+ * Expected filenames in your Vite public folder:
+ *   public/lesson-images/<topic-slug>-activity1-step1.png
+ *   public/lesson-images/<topic-slug>-activity1-step2.png
+ *   ...
+ *   public/lesson-images/<topic-slug>-activity2-step1.png
+ *   ...
+ *   public/lesson-images/<topic-slug>-activity1-final.png
+ *   public/lesson-images/<topic-slug>-activity2-final.png
+ *
+ * Example for topic "Plants" (slug "plants"):
+ *   /lesson-images/plants-activity1-step1.png
+ *   /lesson-images/plants-activity1-final.png
+ */
+function attachStaticImageUrls(lesson: any, topic: string) {
+  if (!lesson || !Array.isArray(lesson.activities)) return lesson;
+
+  const slug = slugifyTopic(topic);
+
+  lesson.activities.forEach((activity: any, aIndex: number) => {
+    const activityNumber = aIndex + 1;
+
+    if (Array.isArray(activity.steps)) {
+      activity.steps.forEach((step: any, sIndex: number) => {
+        const stepNumber = sIndex + 1;
+        step.imageUrl = `/lesson-images/${slug}/${slug}-activity${activityNumber}-step${stepNumber}.png`;
+      });
+    }
+
+    activity.finalImageUrl = `/lesson-images/${slug}/${slug}-activity${activityNumber}-final.png`;
+  });
+
+  return lesson;
 }
 
 // ---------------- Main handler ----------------
@@ -248,7 +294,12 @@ serve(async (req: Request): Promise<Response> => {
 
     if (cached?.lesson_data) {
       console.log(`[${clientIP}] Cache HIT for topic "${topic}"`);
-      return new Response(JSON.stringify({ lesson: cached.lesson_data }), {
+      // make sure image URLs are present even for older cached entries
+      const lessonFromCache = attachStaticImageUrls(
+        cached.lesson_data,
+        topic,
+      );
+      return new Response(JSON.stringify({ lesson: lessonFromCache }), {
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
@@ -435,30 +486,14 @@ IMPORTANT:
     }
 
     console.log(
-      `[${clientIP}] Lesson structure generated, now generating images where needed...`,
+      `[${clientIP}] Lesson structure generated, now attaching static image URLs...`,
     );
 
-    // ---------------- Generate images from prompts and fill imageUrl fields ----------------
-    if (lesson.activities && Array.isArray(lesson.activities)) {
-      for (const activity of lesson.activities) {
-        // Step images
-        if (activity.steps && Array.isArray(activity.steps)) {
-          for (const step of activity.steps) {
-            if (step.imagePrompt && (!step.imageUrl || step.imageUrl === "")) {
-              step.imageUrl = await generateImage(ai, step.imagePrompt);
-            }
-          }
-        }
-
-        // Final result image
-        if (activity.finalImagePrompt && (!activity.finalImageUrl || activity.finalImageUrl === "")) {
-          activity.finalImageUrl = await generateImage(ai, activity.finalImagePrompt);
-        }
-      }
-    }
+    // --------- NEW: no remote image generation, just attach static URLs ------
+    lesson = attachStaticImageUrls(lesson, topic);
 
     console.log(
-      `[${clientIP}] Lesson generated with images (where possible). Saving to cache...`,
+      `[${clientIP}] Lesson generated with static images. Saving to cache...`,
     );
 
     // ---------------- Save to cache table ----------------
