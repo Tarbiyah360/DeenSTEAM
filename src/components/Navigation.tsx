@@ -141,7 +141,6 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu - Only show on smallest screens when logged in */}
-          {user && (
             <div className="flex md:hidden items-center gap-2">
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -201,7 +200,6 @@ const Navigation = () => {
               </SheetContent>
             </Sheet>
             </div>
-          )}
         </div>
       </div>
     </nav>
