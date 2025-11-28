@@ -94,6 +94,21 @@ const STEAMExplorer = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground">
             STEAM Learning Explorer
           </h2>
+            <div
+            className="flex flex-wrap justify-center gap-2 mb-6"
+            style={{ color: "#e9c763" }}
+          >
+            {["Science", "Technology", "Engineering", "Art", "Mathematics"].map(
+              (item) => (
+                <span
+                  key={item}
+                  className="px-3 py-1 rounded-full bg-[#e9c763] text-[#0a1103] text-sm font-semibold shadow-sm"
+                >
+                  {item}
+                </span>
+              )
+            )}
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover Muslim scientists and inventors who shaped modern science, inspired by the 1001 Inventions heritage
           </p>
