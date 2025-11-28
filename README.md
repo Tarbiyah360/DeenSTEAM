@@ -1,4 +1,4 @@
-DeenSTEAM AI Lesson Generator and STEAM explorer
+# DeenSTEAM AI Lesson Generator and STEAM explorer
 STEAM Learning viewed through Islamic lens.
 (STEAM is an acronym for Science Technology Engineering Art and Mathematics )
 
