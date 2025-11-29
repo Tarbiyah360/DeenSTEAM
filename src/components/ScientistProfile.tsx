@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import picture from "@/assets/hero-bg.jpeg"
+
 
 interface Invention {
   name: string;
@@ -35,8 +37,11 @@ const ScientistProfile = ({
   };
 
   return (
-    <div className="min-h-screen py-20 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="relative py-20 px-4 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${picture})`}}>
+        <div className="absolute inset-0 bg-white/70"></div>
+
+      <div className=" relative z-10 container mx-auto max-w-4xl">
         <div className="flex items-center justify-between mb-6">
           <Button
             onClick={() => navigate("/steam-explorer")}
@@ -50,6 +55,7 @@ const ScientistProfile = ({
             onClick={handleDownloadProfile}
             variant="outline"
             className="gap-2"
+            style={{backgroundColor: "#e9c763"}}
           >
             <Download className="h-4 w-4" />
             Download Profile
@@ -75,7 +81,7 @@ const ScientistProfile = ({
         </div>
 
         {/* Biography */}
-        <Card className="p-6 mb-8 bg-card/50 backdrop-blur-sm">
+        <Card className="p-6 mb-8 bg-card backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="text-3xl">📖</span>
             Who Was {name.split(" ")[0]}?
@@ -86,7 +92,7 @@ const ScientistProfile = ({
         </Card>
 
         {/* Fun Facts */}
-        <Card className="p-6 mb-8 bg-card/50 backdrop-blur-sm">
+        <Card className="p-6 mb-8 bg-card backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="text-3xl">⭐</span>
             Fun Facts
@@ -114,7 +120,7 @@ const ScientistProfile = ({
             {inventions.map((invention, index) => (
               <Card
                 key={index}
-                className="p-5 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all"
+                className="p-5 bg-card backdrop-blur-sm hover:shadow-lg transition-all"
               >
                 {invention.imageUrl && (
                   <div className="w-full h-48 mb-4 rounded-lg overflow-hidden bg-muted">

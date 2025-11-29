@@ -1,8 +1,52 @@
 import { Card } from "@/components/ui/card";
-import { Atom, Microscope, Telescope, Beaker } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Atom, Microscope, Telescope, Beaker, Eye, Cog, Wrench, PaintbrushIcon, Calculator} from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import picture from "@/assets/hero-bg.jpeg"
+
+
+
 
 const steamTopics = [
+  {
+    icon: Eye,
+    title: "Science",
+    description: "Discover the father of optics and scientific method",
+    inventor: "Ibn al-Haytham",
+    contribution: "Pioneered experimental physics and optics",
+    link: "/scientist/ibn-al-haytham",
+  },
+  {
+    icon: Cog,
+    title: "Technology",
+    description: "Revolutionary mechanical inventions and automation",
+    inventor: "Al-Jazari",
+    contribution: "Created the first programmable humanoid robot",
+    link: "/scientist/al-jazari",
+  },
+  {
+    icon: Wrench,
+    title: "Engineering",
+    description: "Ingenious mechanical devices and mathematical instruments",
+    inventor: "Banu Musa Brothers",
+    contribution: "Automatic control systems and clever mechanisms",
+    link: "/scientist/banu-musa",
+  },
+  {
+    icon: PaintbrushIcon,
+    title: "Art & Architecture",
+    description: "Master architect of magnificent Ottoman structures",
+    inventor: "Mimar Sinan",
+    contribution: "Designed 300+ architectural masterpieces",
+    link: "/scientist/mimar-sinan",
+  },
+  {
+    icon: Calculator,
+    title: "Mathematics",
+    description: "Brilliant mathematician, astronomer, and poet",
+    inventor: "Omar Khayyam",
+    contribution: "Geometric algebra and calendar reform",
+    link: "/scientist/omar-khayyam",
+  },
   {
     icon: Telescope,
     title: "Astronomy",
@@ -29,7 +73,7 @@ const steamTopics = [
   },
   {
     icon: Atom,
-    title: "Mathematics",
+    title: "Algebra",
     description: "Mathematical innovations that changed the world",
     inventor: "Al-Khwarizmi",
     contribution: "Algebra and algorithms",
@@ -37,20 +81,58 @@ const steamTopics = [
   },
 ];
 
+
 const STEAMExplorer = () => {
   const navigate = useNavigate();
+  const location = useLocation() as { state: { missingScientist?: string } };
+  const missingScientist = location.state?.missingScientist;
 
   return (
-    <section className="py-20 px-4">
-      <div className="container mx-auto max-w-6xl">
+
+    <section
+      id="lesson-generator"
+      aria-labelledby="lesson-heading"
+      className="relative py-20 px-4 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${picture})`}}
+    >
+      <div className="absolute inset-0 bg-white/70"></div>
+
+      <div className=" relative z-10 container mx-auto max-w-6xl">
         <div className="text-center mb-12 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground">
             STEAM Learning Explorer
           </h2>
+            <div
+            className="flex flex-wrap justify-center gap-2 mb-6"
+            style={{ color: "#e9c763" }}
+          >
+            {["Science", "Technology", "Engineering", "Art", "Mathematics"].map(
+              (item) => (
+                <span
+                  key={item}
+                  className="px-3 py-1 rounded-full bg-[#e9c763] text-[#0a1103] text-sm font-semibold shadow-sm"
+                >
+                  {item}
+                </span>
+              )
+            )}
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover Muslim scientists and inventors who shaped modern science, inspired by the 1001 Inventions heritage
           </p>
         </div>
+
+        {missingScientist && (
+          <div className="mb-8 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-sm text-yellow-900">
+            <p className="font-semibold">
+              "Oh no! That&apos;s all the information we had for {" "}
+              <span className="underline">{missingScientist}</span>
+            </p>
+            <p className="mt-1">
+              How about you try and explore one of the amazing Muslim scientists and inventors from the subjects below instead?
+            </p>
+          </div>
+        )}
 
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
           {steamTopics.map((topic, index) => {
@@ -59,7 +141,7 @@ const STEAMExplorer = () => {
               <Card 
                 key={index}
                 onClick={() => navigate(topic.link)}
-                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm group cursor-pointer hover:scale-[1.02]"
+                className="p-5 sm:p-6 md:p-8 hover:shadow-lg transition-all duration-300 border-border/50 bg-card backdrop-blur-sm group cursor-pointer hover:scale-[1.02]"
               >
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
